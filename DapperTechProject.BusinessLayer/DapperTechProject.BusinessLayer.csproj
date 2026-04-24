@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.72" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperTechProject.DTOLayer\DapperTechProject.DTOLayer.csproj" />
+    <ProjectReference Include="..\DapperTechProject.EntityLayer\DapperTechProject.EntityLayer.csproj" />
+  </ItemGroup>
+
 </Project>
