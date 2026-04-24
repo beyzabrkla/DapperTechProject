@@ -2,11 +2,6 @@
 using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.BusinessLayer.Context;
 using DapperTechProject.DTOLayer.CampaignDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DapperTechProject.BusinessLayer.Concrete
 {
@@ -29,7 +24,7 @@ namespace DapperTechProject.BusinessLayer.Concrete
             }
         }
 
-        public async Task CreateCampaignsAsync(CreateCampaignDTO createCampaignDTO)
+        public async Task CreateCampaignAsync(CreateCampaignDTO createCampaignDTO)
         {
             string query = "insert into Campaigns (CampaignName, Budget, ClientName, CreatedDate) values (@name, @budget, @clientName, @createdDate)";
             var parameters = new DynamicParameters();

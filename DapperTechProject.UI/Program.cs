@@ -1,7 +1,20 @@
+using DapperTechProject.BusinessLayer.Abstract;
+using DapperTechProject.BusinessLayer.Concrete;
+using DapperTechProject.BusinessLayer.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Context Kaydı
+builder.Services.AddSingleton<DapperContext>();
+
+// Repository Kayıtları (Dependency Injection)
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<IAdImpressionRepository, AdImpressionRepository>();
+
 
 var app = builder.Build();
 
