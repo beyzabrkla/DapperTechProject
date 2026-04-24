@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DapperTechProject.BusinessLayer/DapperTechProject.BusinessLayer.csproj" />
+  <Project Path="DapperTechProject.DTOLayer/DapperTechProject.DTOLayer.csproj" />
+  <Project Path="DapperTechProject.EntityLayer/DapperTechProject.EntityLayer.csproj" />
+  <Project Path="DapperTechProject.UI/DapperTechProject.UI.csproj" />
+</Solution>
