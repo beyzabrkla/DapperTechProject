@@ -11,10 +11,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<DapperContext>();
 
 // Repository Kayıtları (Dependency Injection)
+builder.Services.AddScoped<IAdImpressionRepository, AdImpressionRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
-builder.Services.AddScoped<IAdImpressionRepository, AdImpressionRepository>();
-
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 
 var app = builder.Build();
 
@@ -35,6 +35,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();

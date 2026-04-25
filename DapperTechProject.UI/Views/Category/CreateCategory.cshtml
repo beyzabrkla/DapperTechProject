@@ -1,0 +1,77 @@
+﻿@model CreateCategoryDTO
+
+@{
+    ViewData["Title"] = "Yeni Kategori Ekle";
+    Layout = "_Layout";
+}
+
+<div class="max-w-[1000px] mx-auto">
+    <form asp-action="CreateCategory" method="post">
+        <div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-body-sm text-stone-400">Inventory</span>
+                    <span class="material-symbols-outlined text-stone-300 text-[14px]">chevron_right</span>
+                    <span class="font-body-sm text-stone-400">Categories</span>
+                    <span class="material-symbols-outlined text-stone-300 text-[14px]">chevron_right</span>
+                    <span class="font-body-sm text-stone-600 font-medium">New Category</span>
+                </div>
+                <h2 class="font-h1 text-h1 text-primary">Yeni Kategori Oluştur</h2>
+                <p class="font-body-md text-on-surface-variant mt-1">Reklam envanterini sınıflandırmak için yeni bir taksonomi düğümü tanımlayın.</p>
+            </div>
+            <div class="flex gap-md">
+                <a asp-action="Index" class="px-md py-sm font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors rounded uppercase flex items-center">Vazgeç</a>
+                <button type="submit" class="px-md py-sm font-label-caps text-label-caps bg-primary text-white hover:bg-stone-800 transition-colors rounded uppercase shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span> Kategoriyi Kaydet
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-lg">
+            <div class="col-span-12 lg:col-span-8 space-y-lg">
+                <div class="bg-white p-lg border border-stone-200 rounded shadow-sm">
+                    <div class="flex items-center gap-2 mb-lg pb-sm border-b border-stone-100">
+                        <span class="material-symbols-outlined text-secondary">info</span>
+                        <h3 class="font-h2 text-h2 text-stone-900">Temel Bilgiler</h3>
+                    </div>
+                    <div class="space-y-md">
+                        <div>
+                            <label class="block font-label-caps text-stone-500 uppercase mb-xs">Kategori Adı</label>
+                            <input asp-for="CategoryName" class="w-full bg-white border border-stone-200 px-md py-sm font-body-md focus:border-primary focus:ring-0 transition-all outline-none rounded-sm" placeholder="Örn: Otomotiv, Sağlık..." />
+                            <p class="text-[11px] text-stone-400 mt-1">Raporlamada görünecek benzersiz isim.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-lg border border-stone-200 rounded shadow-sm">
+                    <div class="flex items-center gap-2 mb-lg pb-sm border-b border-stone-100">
+                        <span class="material-symbols-outlined text-secondary">description</span>
+                        <h3 class="font-h2 text-h2 text-stone-900">Sistem Notu</h3>
+                    </div>
+                    <p class="font-body-md text-on-surface-variant leading-relaxed">
+                        Yeni oluşturulan kategoriler, bağlı yayıncılar için anında filtrelenebilir hale gelir. Lütfen isimlendirme standartlarına uyun.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 space-y-lg">
+                <div class="bg-white p-lg border border-stone-200 rounded shadow-sm">
+                    <div class="flex items-center gap-2 mb-lg pb-sm border-b border-stone-100">
+                        <span class="material-symbols-outlined text-secondary">toggle_on</span>
+                        <h3 class="font-h2 text-h2 text-stone-900">Erişilebilirlik</h3>
+                    </div>
+                    <div class="flex items-center justify-between p-md bg-stone-50 rounded">
+                        <div>
+                            <p class="font-body-md text-stone-900 font-bold">Durum</p>
+                            <p class="text-[11px] text-stone-500">Kategori aktif edilsin mi?</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-stone-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

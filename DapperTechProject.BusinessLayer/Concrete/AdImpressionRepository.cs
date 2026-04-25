@@ -33,7 +33,7 @@ namespace DapperTechProject.BusinessLayer.Concrete
         // Dashboard'daki sayaçlar için hızlı toplama (Aggregate) sorgusu
         public async Task<int> GetTotalClickCountAsync()
         {
-            string query = "SELECT COUNT * FROM AdImpressions WHERE IsClicked = 1";
+            string query = "SELECT COUNT(*) FROM AdImpressions WHERE IsClicked = 1";
             using (var connection = _context.CreateConnection())
             {
                 return await connection.ExecuteScalarAsync<int>(query);

@@ -1,0 +1,133 @@
+﻿@model List<ResultAdImpressionDTO>
+
+@{
+    ViewData["Title"] = "Reklam Gösterimleri";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="grid grid-cols-12 gap-md mb-xl">
+    <div class="col-span-12 md:col-span-4 bg-white border border-slate-200 p-lg flex flex-col justify-between relative overflow-hidden shadow-sm">
+        <div class="relative z-10">
+            <p class="font-label-caps text-label-caps text-slate-400 uppercase opacity-60">Toplam İzleme Verisi</p>
+            <h2 class="font-h1 text-[32px] font-extrabold text-[#332A1C] mt-2 tracking-tight">1.000.000+</h2>
+            <div class="flex items-center gap-2 mt-4 text-emerald-600 font-bold text-xs">
+                <span class="material-symbols-outlined text-sm">database</span>
+                <span>Veritabanı Durumu: Optimize</span>
+            </div>
+        </div>
+        <div class="absolute -right-8 -bottom-8 opacity-5 text-[#332A1C]">
+            <span class="material-symbols-outlined text-[120px]">analytics</span>
+        </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-8 bg-white border border-slate-200 p-lg shadow-sm">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <p class="font-label-caps text-label-caps text-slate-400 uppercase opacity-60">Ağ Yoğunluğu</p>
+                <h3 class="font-h2 text-h2 text-[#332A1C]">Gerçek Zamanlı Gösterim Analizi</h3>
+            </div>
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-100 uppercase">Live Stream</span>
+        </div>
+        <div class="h-20 flex items-end gap-1.5 pt-4">
+            @for (int i = 0; i < 24; i++)
+            {
+                var height = new Random().Next(20, 100);
+                <div class="flex-1 bg-[#332A1C]/10 h-[@height%] rounded-t-sm hover:bg-[#332A1C]/30 transition-all cursor-help" title="Yük: %@height"></div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="bg-white border border-slate-200 shadow-sm overflow-hidden">
+    <div class="px-lg py-md border-b border-slate-100 flex justify-between items-center bg-white">
+        <div>
+            <h3 class="font-h2 text-h2 text-primary">Reklam Gösterim Kayıtları</h3>
+            <p class="text-[11px] text-slate-400 mt-1 uppercase tracking-wider">Son 1.000.000 etkileşim içerisinden filtrelendi</p>
+        </div>
+        <div class="flex items-center gap-sm">
+            <div class="relative group">
+                <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] group-focus-within:text-[#332A1C]">search</span>
+                <input class="pl-9 pr-4 py-2 text-xs border-slate-200 rounded focus:ring-2 focus:ring-[#332A1C]/5 focus:border-[#332A1C] w-72 transition-all" placeholder="UUID veya Kampanya ara..." type="text" />
+            </div>
+            <button class="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded text-[11px] font-bold uppercase hover:bg-slate-200 transition-all border border-slate-200">
+                <span class="material-symbols-outlined text-[16px]">filter_list</span> Filtrele
+            </button>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50/80 border-b border-slate-200">
+                    <th class="px-lg py-4 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest">Gösterim Zamanı</th>
+                    <th class="px-lg py-4 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest">Cihaz / OS</th>
+                    <th class="px-lg py-4 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest text-center">Bölge</th>
+                    <th class="px-lg py-4 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest text-right">Maliyet (eCPM)</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                        <td class="px-lg py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <div>
+                                    <p class="font-data-tabular text-data-tabular text-primary">@item.ImpressionDate.ToString("dd.MM.yyyy HH:mm:ss")</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">UUID: #@item.ImpressionID</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-lg py-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px]">devices</span>
+                                <span class="text-xs font-medium text-slate-700">@item.DeviceType / @item.OS</span>
+                            </div>
+                        </td>
+                        <td class="px-lg py-4 text-center">
+                            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold">
+                                @item.Region
+                            </span>
+                        </td>
+                        <td class="px-lg py-4 text-right">
+                            <p class="font-data-tabular text-sm font-bold text-[#332A1C]">₺@item.Cost.ToString("N4")</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="px-lg py-4 flex justify-between items-center border-t border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <p class="text-[11px] text-slate-500 font-medium">Toplam <span class="text-primary font-bold">1.000.342</span> kayıt arasından ilk 50 gösteriliyor</p>
+            <div class="h-4 w-px bg-slate-300"></div>
+            <select class="bg-transparent border-none text-[11px] font-bold text-slate-500 focus:ring-0 cursor-pointer">
+                <option>50 Satır</option>
+                <option>100 Satır</option>
+            </select>
+        </div>
+        
+        <div class="flex items-center gap-1">
+            <button class="p-1.5 text-slate-400 hover:text-primary transition-colors border border-slate-200 bg-white rounded shadow-sm disabled:opacity-30">
+                <span class="material-symbols-outlined text-sm">first_page</span>
+            </button>
+            <button class="p-1.5 text-slate-400 hover:text-primary transition-colors border border-slate-200 bg-white rounded shadow-sm">
+                <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            <div class="flex gap-1 px-2">
+                <span class="text-[11px] font-black px-3 py-1 bg-[#332A1C] text-white rounded shadow-sm">1</span>
+                <span class="text-[11px] font-bold px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded hover:bg-slate-50 cursor-pointer transition-all">2</span>
+                <span class="text-[11px] font-bold px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded hover:bg-slate-50 cursor-pointer transition-all">3</span>
+                <span class="text-[11px] font-bold px-3 py-1 text-slate-400">...</span>
+                <span class="text-[11px] font-bold px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded hover:bg-slate-50 cursor-pointer transition-all">20000</span>
+            </div>
+            <button class="p-1.5 text-slate-400 hover:text-primary transition-colors border border-slate-200 bg-white rounded shadow-sm">
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+            <button class="p-1.5 text-slate-400 hover:text-primary transition-colors border border-slate-200 bg-white rounded shadow-sm">
+                <span class="material-symbols-outlined text-sm">last_page</span>
+            </button>
+        </div>
+    </div>
+</div>
