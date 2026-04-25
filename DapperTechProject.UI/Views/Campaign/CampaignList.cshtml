@@ -1,0 +1,146 @@
+﻿@model List<ResultCampaignDTO>
+@{
+    ViewData["Title"] = "Kampanya Yönetimi";
+    Layout = "_Layout";
+}
+
+<div class="max-w-container-max mx-auto space-y-md">
+    <div class="flex justify-between items-end mb-xl">
+        <div>
+            <h1 class="font-h1 text-h1 text-on-surface">Kampanya Yönetimi</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Aktif reklam kampanyalarınızı yönetin ve optimize edin.</p>
+        </div>
+        <div class="flex gap-sm">
+            <button class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white font-data-tabular text-data-tabular hover:bg-surface-container transition-colors rounded text-sm">
+                <span class="material-symbols-outlined">download</span> CSV Dışa Aktar
+            </button>
+            <button class="flex items-center gap-2 px-md py-2 bg-primary text-white font-data-tabular text-data-tabular hover:bg-primary-container transition-colors rounded text-sm">
+                <span class="material-symbols-outlined">bolt</span> Toplu Optimizasyon
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white border border-outline-variant rounded shadow-sm p-md">
+        <div class="flex items-center gap-sm mb-md pb-sm border-b border-surface-container">
+            <span class="material-symbols-outlined text-on-tertiary-container">filter_list</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">GELİŞMİŞ FİLTRELEME</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-md items-end">
+            <div class="space-y-1">
+                <label class="font-label-caps text-label-caps text-on-surface-variant block uppercase text-[10px]">Ülke / Bölge</label>
+                <select class="w-full border-outline-variant rounded font-body-sm text-body-sm h-10 px-3 focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option>Tüm Bölgeler</option>
+                    <option>Kuzey Amerika</option>
+                    <option>Avrupa Birliği</option>
+                    <option>Asya Pasifik (APAC)</option>
+                    <option>Türkiye</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="font-label-caps text-label-caps text-on-surface-variant block uppercase text-[10px]">Kampanya Türü</label>
+                <select class="w-full border-outline-variant rounded font-body-sm text-body-sm h-10 px-3 focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option>Tüm Kampanyalar</option>
+                    <option>Arama Ağı Reklamları</option>
+                    <option>Görüntülü Reklam Ağı</option>
+                    <option>Video Preroll</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="font-label-caps text-label-caps text-on-surface-variant block uppercase text-[10px]">Tarih Aralığı</label>
+                <div class="relative">
+                    <input class="w-full border-outline-variant rounded font-body-sm text-body-sm h-10 pl-10 pr-3 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="01 Ocak, 2024 - 30 Ocak, 2024" type="text" />
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant">calendar_today</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 h-10 bg-tertiary text-white font-data-tabular text-data-tabular rounded hover:bg-tertiary-container transition-colors text-sm font-semibold">Filtrele</button>
+                <button class="h-10 px-3 border border-outline-variant text-on-surface hover:bg-surface-container rounded transition-colors">
+                    <span class="material-symbols-outlined">restart_alt</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container border-b border-outline-variant">
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-[10px]">ID</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-[10px]">Kampanya Adı</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-[10px]">Planlama</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right text-[10px]">Bütçe</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right text-[10px]">Harcanan</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-center text-[10px]">Durum</th>
+                        <th class="px-md py-3 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right text-[10px]">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <td class="px-md py-3 font-data-tabular text-data-tabular text-on-tertiary-fixed-variant text-xs">CMP-8942</td>
+                        <td class="px-md py-3">
+                            <div class="font-body-md text-body-md font-semibold text-on-surface">Yaz Gündönümü İndirimleri</div>
+                            <div class="font-body-sm text-body-sm text-on-surface-variant">Global • Görüntülü Reklam Ağı</div>
+                        </td>
+                        <td class="px-md py-3 font-data-tabular text-data-tabular text-xs">01 Haz - 30 Ağu</td>
+                        <td class="px-md py-3 font-data-tabular text-data-tabular text-right text-xs">₺145.000,00</td>
+                        <td class="px-md py-3 font-data-tabular text-data-tabular text-right text-secondary text-xs font-bold">₺132.140,50</td>
+                        <td class="px-md py-3 text-center">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed-variant font-label-caps text-[9px] uppercase font-bold">Aktif</span>
+                        </td>
+                        <td class="px-md py-3 text-right">
+                            <div class="flex justify-end gap-1">
+                                <button class="p-1.5 hover:bg-surface-container-high rounded text-on-surface-variant"><span class="material-symbols-outlined">edit</span></button>
+                                <button class="p-1.5 hover:bg-error-container hover:text-on-error-container rounded text-on-surface-variant"><span class="material-symbols-outlined">delete</span></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="px-md py-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center">
+            <span class="font-body-sm text-body-sm text-on-surface-variant">48 kampanya içinden 1 - 10 arası gösteriliyor</span>
+            <div class="flex gap-1">
+                <button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded hover:bg-surface-container transition-colors disabled:opacity-50" disabled>
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center border border-primary bg-primary text-white rounded font-data-tabular text-xs">1</button>
+                <button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded hover:bg-surface-container font-data-tabular text-xs">2</button>
+                <button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded hover:bg-surface-container transition-colors">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+        <div class="p-md bg-white border border-outline-variant rounded flex items-center gap-md">
+            <div class="w-12 h-12 bg-secondary-container rounded flex items-center justify-center text-on-secondary-container">
+                <span class="material-symbols-outlined">trending_up</span>
+            </div>
+            <div>
+                <div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Ort. CTR</div>
+                <div class="font-h1 text-h1 text-on-surface">%3.42</div>
+            </div>
+        </div>
+        <div class="p-md bg-white border border-outline-variant rounded flex items-center gap-md">
+            <div class="w-12 h-12 bg-tertiary-fixed rounded flex items-center justify-center text-on-tertiary-fixed-variant">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+            <div>
+                <div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harcanan Oranı</div>
+                <div class="font-h1 text-h1 text-on-surface">%92.1</div>
+            </div>
+        </div>
+        <div class="p-md bg-white border border-outline-variant rounded flex items-center gap-md">
+            <div class="w-12 h-12 bg-primary-fixed rounded flex items-center justify-center text-on-primary-fixed-variant">
+                <span class="material-symbols-outlined">group</span>
+            </div>
+            <div>
+                <div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Aktif Hedef Kitle</div>
+                <div class="font-h1 text-h1 text-on-surface">1.2M</div>
+            </div>
+        </div>
+    </div>
+</div>

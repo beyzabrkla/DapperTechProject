@@ -1,0 +1,93 @@
+﻿@model GetByIdCampaignDTO
+@{
+    ViewData["Title"] = "Kampanya Güncelle";
+    Layout = "_Layout";
+}
+
+<div class="max-w-[800px] mx-auto space-y-md">
+    <div class="flex justify-between items-center mb-xl">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200 uppercase">Düzenleme Modu</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">ID: #8942</span>
+            </div>
+            <h1 class="font-h1 text-h1 text-on-surface">Kampanyayı Düzenle</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Mevcut kampanya performansını ve ayarlarını güncelleyin.</p>
+        </div>
+        <a asp-action="Index" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Vazgeç
+        </a>
+    </div>
+
+    <form class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+        <input type="hidden" name="CampaignId" value="8942" />
+
+        <div class="p-xl space-y-lg">
+            <div class="space-y-md">
+                <h3 class="font-label-caps text-label-caps text-secondary border-b border-surface-container pb-2 uppercase tracking-widest text-[10px]">Kampanya Detayları</h3>
+                
+                <div class="grid grid-cols-1 gap-md">
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Kampanya Adı</label>
+                        <input type="text" value="Yaz Gündönümü İndirimleri" class="w-full border-outline-variant bg-slate-50/50 rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Reklam Türü</label>
+                        <select class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">
+                            <option selected>Görüntülü Reklam</option>
+                            <option>Arama Ağı</option>
+                            <option>Video</option>
+                            <option>Sosyal Medya</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Durum</label>
+                        <select class="w-full border-secondary/20 bg-secondary-container/10 rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none text-on-secondary-fixed-variant font-bold">
+                            <option selected>Yayında</option>
+                            <option>Beklemede</option>
+                            <option>Durduruldu</option>
+                            <option>Tamamlandı</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-md pt-4">
+                <h3 class="font-label-caps text-label-caps text-secondary border-b border-surface-container pb-2 uppercase tracking-widest text-[10px]">Bütçe Revizyonu</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Güncel Bütçe (₺)</label>
+                        <div class="relative">
+                            <input type="number" value="145000" class="w-full border-outline-variant rounded font-body-sm h-11 pl-10 pr-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">
+                            <span class="absolute left-4 top-3 text-slate-400 font-bold text-sm">₺</span>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Harcanan Tutar (Salt Okunur)</label>
+                        <div class="relative">
+                            <input type="text" value="132.140,50" readonly class="w-full border-outline-variant bg-surface-container-low rounded font-body-sm h-11 pl-10 pr-4 text-slate-500 cursor-not-allowed">
+                            <span class="absolute left-4 top-3 text-slate-300 font-bold text-sm">₺</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-surface-container px-xl py-6 flex justify-between items-center border-t border-outline-variant">
+            <button type="button" class="flex items-center gap-2 text-error font-bold text-xs uppercase tracking-widest hover:opacity-80 transition-opacity">
+                <span class="material-symbols-outlined text-[18px]">delete_forever</span> Kampanyayı Sil
+            </button>
+            
+            <div class="flex gap-3">
+                <button type="submit" class="bg-secondary text-white px-8 py-2.5 rounded font-bold text-xs uppercase tracking-widest hover:bg-on-secondary-fixed-variant transition-all flex items-center gap-2 shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">save</span> Değişiklikleri Uygula
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,41 @@
+﻿<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-14 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200 flex justify-between items-center px-6 font-inter shadow-sm">
+    <div class="flex items-center gap-10">
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-black text-[#332A1C] uppercase tracking-tighter">Kategoriler</span>
+            <div class="h-4 w-px bg-stone-200"></div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px] text-emerald-600">database</span>
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Canlı Sistem</span>
+            </div>
+        </div>
+
+        <div class="relative group">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px] group-focus-within:text-[#332A1C] transition-colors">search</span>
+            <input class="bg-stone-100 border border-transparent rounded-full py-1.5 pl-10 pr-4 w-72 text-xs focus:ring-2 focus:ring-[#332A1C]/10 focus:bg-white focus:border-stone-300 transition-all outline-none" placeholder="Kampanya, kategori veya ID ara..." type="text" />
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <nav class="hidden md:flex gap-1 mr-4">
+            <a class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#332A1C] hover:bg-stone-50 rounded-md transition-all" href="#">Performans</a>
+            <a class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#332A1C] hover:bg-stone-50 rounded-md transition-all" href="#">Kayıtlar</a>
+            <a class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-900 bg-stone-100 rounded-md border border-stone-200" href="#">Denetim</a>
+        </nav>
+
+        <div class="h-6 w-px bg-stone-200 mx-2"></div>
+
+        <div class="flex items-center gap-2">
+            <button class="relative p-2 text-stone-500 hover:text-[#332A1C] hover:bg-stone-50 rounded-lg transition-all">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+            </button>
+            <button class="p-2 text-stone-500 hover:text-[#332A1C] hover:bg-stone-50 rounded-lg transition-all">
+                <span class="material-symbols-outlined text-[22px]">dns</span>
+            </button>
+            <button class="flex items-center gap-2 ml-2 p-1 pr-3 hover:bg-stone-50 border border-transparent hover:border-stone-200 rounded-full transition-all group">
+                <img alt="Admin" class="w-7 h-7 rounded-full shadow-sm" src="https://ui-avatars.com/api/?name=Admin&background=332A1C&color=fff" />
+                <span class="text-[11px] font-bold text-stone-700 uppercase group-hover:text-black">Konsol</span>
+            </button>
+        </div>
+    </div>
+</header>

@@ -12,10 +12,9 @@ namespace DapperTechProject.UI.Controllers
             _adImpressionRepository = adImpressionRepository;
         }
 
-        public async Task<IActionResult> Index(int page=1)
+        public async Task<IActionResult> AdImpressionList(int pageNumber, int pageSize)
         {
-            int pageSize = 12; //her sayfada 12 veri gelicek
-            var values = await _adImpressionRepository.GetAdImpressionsWithPagingAsync(page, pageSize);
+            var values = await _adImpressionRepository.GetAdImpressionsWithPagingAsync(pageNumber, pageSize);
             return View(values);
         }
     }

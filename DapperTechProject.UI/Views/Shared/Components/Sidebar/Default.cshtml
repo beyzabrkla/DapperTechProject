@@ -1,0 +1,53 @@
+﻿<aside class="fixed left-0 top-0 h-screen w-[260px] z-50 bg-[#332A1C] border-r border-stone-800 shadow-2xl flex flex-col font-inter text-sm text-white">
+    <div class="p-6 mb-4">
+        <h1 class="text-xl font-black tracking-tighter text-white uppercase italic">Ad-Tech <span class="text-[#D4A373]">Pro</span></h1>
+        <p class="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-bold mt-1">Enterprise Analytics</p>
+    </div>
+
+    <nav class="flex-1 px-0 space-y-1">
+        <a class="py-3 px-6 flex items-center gap-3 transition-all duration-300 border-l-4 border-transparent hover:bg-white/5 hover:border-[#D4A373] group active:scale-95" asp-controller="Dashboard" asp-action="Index">
+            <span class="material-symbols-outlined text-stone-400 group-hover:text-[#D4A373] transition-colors">dashboard</span>
+            <span class="font-medium">Dashboard (Özet)</span>
+        </a>
+
+        <a class="py-3 px-6 flex items-center gap-3 transition-all duration-300 border-l-4 border-[#D4A373] bg-white/5 text-white group active:scale-95" asp-controller="AdImpression" asp-action="AdImpressionList">
+            <span class="material-symbols-outlined text-[#D4A373]">analytics</span>
+            <span class="font-medium">Reklam Gösterimleri</span>
+        </a>
+
+        <div class="my-4 mx-6 border-t border-stone-800/50"></div>
+
+        <a class="py-3 px-6 flex items-center gap-3 transition-all duration-300 border-l-4 border-transparent hover:bg-white/5 hover:border-[#D4A373] group text-stone-400 hover:text-white active:scale-95" asp-controller="Campaign" asp-action="CampaignList">
+            <span class="material-symbols-outlined group-hover:text-[#D4A373]">ads_click</span>
+            <span class="font-medium">Kampanyalar</span>
+        </a>
+
+        <a class="py-3 px-6 flex items-center gap-3 transition-all duration-300 border-l-4 border-transparent hover:bg-white/5 hover:border-[#D4A373] group text-stone-400 hover:text-white active:scale-95" asp-controller="Category" asp-action="CategoryList">
+            <span class="material-symbols-outlined group-hover:text-[#D4A373]">category</span>
+            <span class="font-medium">Kategoriler</span>
+        </a>
+
+        <a class="py-3 px-6 flex items-center gap-3 transition-all duration-300 border-l-4 border-transparent hover:bg-white/5 hover:border-[#D4A373] group text-stone-400 hover:text-white active:scale-95" asp-controller="Publisher" asp-action="PublisherList">
+            <span class="material-symbols-outlined group-hover:text-[#D4A373]">people</span>
+            <span class="font-medium">Yayıncılar</span>
+        </a>
+    </nav>
+
+    <div class="p-4 border-t border-stone-800 bg-stone-900/50">
+        <button class="w-full bg-[#D4A373] text-[#332A1C] font-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-[#E9C46A] transition-all shadow-lg active:scale-95 transform">
+            <span class="material-symbols-outlined text-[20px] font-bold">add_circle</span>
+            <span class="uppercase text-[11px] tracking-wider">Yeni Kampanya</span>
+        </button>
+        
+        <div class="mt-4 flex items-center gap-3 p-2 rounded-lg bg-stone-800/40 border border-stone-700/50">
+            <img alt="Admin" class="w-8 h-8 rounded-full border border-[#D4A373]/50" src="https://ui-avatars.com/api/?name=Admin&background=D4A373&color=332A1C" />
+            <div class="overflow-hidden">
+                <p class="text-[11px] font-bold text-white truncate uppercase">Sistem Yöneticisi</p>
+                <div class="flex items-center gap-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+                    <p class="text-[9px] text-stone-500 font-bold uppercase tracking-tighter">Online</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>

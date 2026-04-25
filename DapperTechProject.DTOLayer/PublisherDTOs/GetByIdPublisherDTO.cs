@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DapperTechProject.DTOLayer.PublisherDTOs
 {
-    public class ResultPublisherDTO
+    public class GetByIdPublisherDTO
     {
         public int PublisherID { get; set; }
         public string WebsiteURL { get; set; }
+        public string Category { get; set; }
         public int CategoryID { get; set; }
-        public string CategoryName { get; set; }
     }
 }

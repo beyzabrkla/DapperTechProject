@@ -1,0 +1,127 @@
+﻿@model List<ResultCategoryDTO>
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+    Layout = "_Layout";
+}
+
+<div class="flex justify-between items-end mb-lg">
+    <div>
+        <h2 class="font-h1 text-h1 text-primary">Kategori Yönetimi</h2>
+        <p class="font-body-md text-on-surface-variant">Reklam segmentlerini sınıflandırın ve performanslarını izleyin.</p>
+    </div>
+    <a asp-action="CreateCategory" class="bg-primary-container text-white px-md py-sm rounded-lg flex items-center gap-2 hover:bg-stone-800 transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">add_circle</span>
+        <span class="font-body-md font-semibold">Yeni Kategori</span>
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-md mb-lg">
+    <div class="bg-white border border-stone-100 p-md rounded-xl shadow-sm flex flex-col justify-between">
+        <div>
+            <span class="font-label-caps text-on-surface-variant uppercase">Toplam Kategori</span>
+            <div class="flex items-baseline gap-2 mt-sm">
+                <span class="font-h1 text-[32px]">@Model.Count</span>
+                <span class="text-secondary text-[12px] font-bold">+3 bu ay</span>
+            </div>
+        </div>
+        <div class="mt-md pt-md border-t border-stone-50 flex items-center gap-2 text-stone-400">
+            <span class="material-symbols-outlined text-[16px]">update</span>
+            <span class="text-[10px] font-medium">Az önce güncellendi</span>
+        </div>
+    </div>
+    
+    <div class="bg-white border border-stone-100 p-md rounded-xl shadow-sm col-span-1 md:col-span-2 flex items-center justify-between overflow-hidden relative">
+        <div class="z-10">
+            <span class="font-label-caps text-on-surface-variant uppercase">En Çok Tercih Edilen</span>
+            <div class="mt-sm">
+                <span class="font-h1 text-[24px] text-tertiary">Teknoloji & Yazılım</span>
+                <p class="font-body-sm text-secondary mt-1">Global pazar payının %24.8'i</p>
+            </div>
+        </div>
+        <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-secondary-container/20 to-transparent"></div>
+        <div class="z-10 bg-secondary-container/40 p-4 rounded-full mr-4">
+            <span class="material-symbols-outlined text-[40px] text-secondary">trending_up</span>
+        </div>
+    </div>
+
+    <div class="bg-primary-container text-white p-md rounded-xl shadow-sm flex flex-col justify-center">
+        <span class="font-label-caps text-on-primary-container uppercase">Ağ Verimliliği</span>
+        <span class="font-h1 text-[32px] mt-sm">94.2%</span>
+        <div class="w-full bg-white/10 h-1.5 rounded-full mt-md overflow-hidden">
+            <div class="bg-secondary-fixed-dim h-full w-[94.2%]"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white border border-stone-200 p-md rounded-xl mb-md flex flex-wrap items-center gap-md">
+    <div class="flex-1 min-w-[300px] relative">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[20px]">search</span>
+        <input class="w-full pl-10 pr-4 py-2 bg-stone-50 border-none rounded-lg font-body-md focus:ring-2 focus:ring-primary-container text-on-surface" placeholder="Kategori ara..." type="text" />
+    </div>
+    <div class="flex items-center gap-3">
+        <label class="font-label-caps text-stone-500 whitespace-nowrap uppercase">Durum:</label>
+        <select class="bg-stone-50 border-none rounded-lg py-2 pl-4 pr-10 font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container">
+            <option>Tümü</option>
+            <option>Aktif</option>
+            <option>Pasif</option>
+        </select>
+    </div>
+    <button class="flex items-center gap-2 px-md py-2 text-stone-600 hover:bg-stone-100 rounded-lg transition-colors font-body-sm font-semibold">
+        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+        Gelişmiş
+    </button>
+</div>
+
+<div class="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-sm">
+    <table class="w-full text-left border-collapse">
+        <thead class="bg-stone-50 border-b border-stone-200">
+            <tr>
+                <th class="px-md py-3 font-label-caps text-stone-500 uppercase">Kategori Adı</th>
+                <th class="px-md py-3 font-label-caps text-stone-500 uppercase">Açıklama</th>
+                <th class="px-md py-3 font-label-caps text-stone-500 uppercase text-center">Durum</th>
+                <th class="px-md py-3 font-label-caps text-stone-500 uppercase text-right">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+            @foreach (var item in Model)
+            {
+                <tr class="hover:bg-stone-50 transition-colors group">
+                    <td class="px-md py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+                                <span class="material-symbols-outlined text-[18px]">category</span>
+                            </div>
+                            <div>
+                                <p class="font-body-md font-semibold text-primary">@item.CategoryName</p>
+                                <p class="text-[10px] text-stone-400">ID: #@item.CategoryID</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-md py-4">
+                        <p class="font-body-sm text-stone-600">Bu kategori aktif reklam ağında kullanılmaktadır.</p>
+                    </td>
+                    <td class="px-md py-4 text-center">
+                        <span class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold uppercase rounded-full tracking-wider border border-secondary/10">Aktif</span>
+                    </td>
+                    <td class="px-md py-4 text-right">
+                        <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <a asp-action="UpdateCategory" asp-route-id="@item.CategoryID" class="p-1.5 hover:bg-stone-100 rounded-md text-stone-600 transition-colors" title="Düzenle">
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                            </a>
+                            <a asp-action="DeleteCategory" asp-route-id="@item.CategoryID" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="p-1.5 hover:bg-error/10 rounded-md text-error transition-colors" title="Sil">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <div class="p-md bg-stone-50 flex items-center justify-between border-t border-stone-200">
+        <span class="font-body-sm text-stone-500">Toplam @Model.Count kayıt listeleniyor</span>
+        <div class="flex items-center gap-2">
+            <button class="w-8 h-8 flex items-center justify-center bg-primary-container text-white rounded font-body-sm font-bold">1</button>
+        </div>
+    </div>
+</div>

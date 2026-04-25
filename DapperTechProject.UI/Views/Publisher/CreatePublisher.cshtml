@@ -1,0 +1,57 @@
+﻿@model CreatePublisherDTO
+
+@{
+    ViewData["Title"] = "Yeni Yayıncı Ekle";
+    Layout = "_Layout";
+}
+
+<div class="max-w-[800px] mx-auto space-y-md">
+    <div class="flex justify-between items-center mb-xl">
+        <div>
+            <h1 class="font-h1 text-h1 text-on-surface">Yeni Yayıncı Ekle</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Sisteme yeni bir platform veya web sitesi dahil edin.</p>
+        </div>
+        <a asp-action="Index" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Listeye Dön
+        </a>
+    </div>
+
+    <form asp-action="CreatePublisher" method="post" class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+        <div class="p-xl space-y-lg">
+            
+            <div class="space-y-md">
+                <h3 class="font-label-caps text-label-caps text-on-tertiary-fixed-variant border-b border-surface-container pb-2 uppercase tracking-widest text-[10px]">Platform Bilgileri</h3>
+                
+                <div class="grid grid-cols-1 gap-md">
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Web Sitesi Adresi (URL)</label>
+                        <input type="text" asp-for="WebsiteURL" placeholder="https://example.com" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Kategori Adı</label>
+                        <input type="text" asp-for="CategoryID" placeholder="Örn: Teknoloji" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Kategori Seçimi (ID)</label>
+                        <select asp-for="CategoryID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                            <option value="1">Haber</option>
+                            <option value="2">E-Ticaret</option>
+                            <option value="3">Teknoloji</option>
+                            <option value="4">Blog</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-surface-container px-xl py-6 flex justify-end gap-3 border-t border-outline-variant">
+            <button type="reset" class="px-6 py-2.5 font-bold text-xs uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-colors">Temizle</button>
+            <button type="submit" class="bg-[#332A1C] text-white px-8 py-2.5 rounded font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">add_task</span> Yayıncıyı Kaydet
+            </button>
+        </div>
+    </form>
+</div>
