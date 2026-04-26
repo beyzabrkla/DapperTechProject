@@ -10,7 +10,10 @@ namespace DapperTechProject.EntityLayer
     {
         public int CampaignID { get; set; }
         public string CampaignName { get; set; }
-        public decimal? Budget { get; set; } // Görselde NULL göründüğü için nullable yaptık
+        public decimal? Budget { get; set; }
         public string ClientName { get; set; }
+        public int RegionID { get; set; }
+        public int TypeID { get; set; }  
+        public DateTime CreatedDate { get; set; }
     }
 }

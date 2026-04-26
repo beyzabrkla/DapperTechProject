@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DapperTechProject.DTOLayer.AdImpressionDTOs;
 using DapperTechProject.DTOLayer.CampaignDTOs;
+using DapperTechProject.DTOLayer.CampaignTypeDTOs;
 using DapperTechProject.DTOLayer.CateogoryDTOs;
 using DapperTechProject.DTOLayer.PublisherDTOs;
+using DapperTechProject.DTOLayer.RegionDTOs;
 using DapperTechProject.EntityLayer;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,11 @@ namespace DapperTechProject.BusinessLayer.Mapping
             CreateMap<Campaign, CreateCampaignDTO>().ReverseMap();
             CreateMap<Campaign, UpdateCampaignDTO>().ReverseMap();
             CreateMap<Campaign, GetByIdCampaignDTO>().ReverseMap();
-        
+
+            CreateMap<Region, ResultRegionDTO>().ReverseMap();
+
+            CreateMap<CampaignType, ResultCampaignTypeDTO>().ReverseMap();
+
             CreateMap<Category, CreateCategoryDTO>().ReverseMap();
             CreateMap<Category, GetByIdCategoryDTO>().ReverseMap();
             CreateMap<Category, ResultCategoryDTO>().ReverseMap();
@@ -30,7 +36,7 @@ namespace DapperTechProject.BusinessLayer.Mapping
 
             CreateMap<Publisher, CreatePublisherDTO>().ReverseMap();
             CreateMap<Publisher, GetByIdPublisherDTO>()
-                            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CategoryName)) // Eğer Entity'de CategoryName ise eşle
+                            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CategoryName)) 
                             .ReverseMap();
             CreateMap<Publisher, ResultPublisherDTO>().ReverseMap();
             CreateMap<Publisher, UpdatePublisherDTO>().ReverseMap();
