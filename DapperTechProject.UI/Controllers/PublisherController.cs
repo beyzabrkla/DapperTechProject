@@ -18,20 +18,29 @@ namespace DapperTechProject.UI.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> PublisherList(int page = 1, int? categoryId = null)
+        public async Task<IActionResult> PublisherList(int page = 1, int? categoryId = null, bool? status = null)
         {
             int pageSize = 12;
 
-            var categories = await _categoryRepository.GetAllCategoriesAsync();
-            ViewBag.Categories = categories.ToList();
+            // Filtre dropdownları için tüm kategorileri getiriyoruz
+            ViewBag.Categories = await _categoryRepository.GetCategoriesPagedAsync(1, 0, true);
 
-            int totalCount = await _publisherRepository.GetTotalPublisherCountAsync(categoryId); // Toplam yayıncı sayısını kategoriye göre alıyoruz
-            var values = await _publisherRepository.GetPublishersWithCategoriesAsync(page, pageSize, categoryId); // Yayıncıları kategori bilgisiyle birlikte alıyoruz
+            var values = await _publisherRepository.GetPublishersWithCategoriesAsync(page, pageSize, categoryId, status); //filtrelenmiş ve sayfalama yapılmış yayıncıları getiriyoruz
 
-            ViewBag.CurrentPage = page;
-            ViewBag.PageSize = pageSize;
+
+            //İstatistikler için toplam kayıt sayısını getiriyoruz
+            int totalCount = await _publisherRepository.GetTotalPublisherCountAsync(categoryId, status); //tablonun altındaki yer için toplam * kayıt bulundu sayısını getiriyoruz seçilen parametrelere göre
+
+            ViewBag.GrandTotal = await _publisherRepository.GetTotalPublisherCountAsync(null, null); // Sistemdeki tüm yayıncılar
+
+            ViewBag.ActiveCount = await _publisherRepository.GetTotalPublisherCountAsync(null, true); //sistemdeki aktif yayıncılar
+
+            //Viewbag ile sayfaya gönderiyoruz
             ViewBag.TotalCount = totalCount;
             ViewBag.SelectedCategory = categoryId;
+            ViewBag.CurrentStatus = status;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
             ViewBag.TotalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
 
             return View(values);
@@ -40,8 +49,8 @@ namespace DapperTechProject.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> CreatePublisher()
         {
-            ViewBag.Categories = (await _categoryRepository.GetAllCategoriesAsync()).ToList();
-            return View();
+            ViewBag.Categories = await _categoryRepository.GetCategoriesPagedAsync(1, 0, true); //1. sayfadan başlayarak tüm aktif kategorileri getiriyoruz
+            return View(); 
         }
 
         [HttpPost]
@@ -54,11 +63,9 @@ namespace DapperTechProject.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdatePublisher(int id)
         {
-            var categories = await _categoryRepository.GetAllCategoriesAsync();
-            ViewBag.Categories = categories.ToList();
+            ViewBag.Categories = await _categoryRepository.GetCategoriesPagedAsync(1, 0, true);
 
             var publisher = await _publisherRepository.GetByIdPublisherAsync(id);
-
             if (publisher == null) return RedirectToAction("PublisherList");
 
             var model = _mapper.Map<GetByIdPublisherDTO>(publisher);

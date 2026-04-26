@@ -11,5 +11,7 @@ namespace DapperTechProject.DTOLayer.PublisherDTOs
         public int PublisherID { get; set; }
         public string WebsiteURL { get; set; }
         public int CategoryID { get; set; }
+        public bool Status { get; set; } 
+
     }
 }

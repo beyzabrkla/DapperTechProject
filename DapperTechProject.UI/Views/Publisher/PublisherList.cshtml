@@ -21,35 +21,37 @@
         <div>
             <h3 class="text-lg font-bold text-[#332A1C]">Yayıncı Ağı Yönetimi</h3>
             <p class="text-[11px] text-slate-400 uppercase tracking-widest font-semibold">
-                Toplam <span class="text-[#332A1C]">@totalCount</span> kayıttan
-                <span class="text-[#332A1C]">@startRecord - @endRecord</span> arası gösteriliyor
+                Toplam <span class="text-[#332A1C]">@ViewBag.TotalCount</span> kayıttan
+                @ViewBag.CurrentPage. sayfa gösteriliyor
             </p>
         </div>
+    
         <div class="flex items-center gap-sm">
             <div class="flex flex-col gap-1">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest">Kategori Filtresi</label>
-                <select onchange="location.href='?categoryId=' + this.value"
-                        class="bg-slate-50 border border-slate-200 text-[#332A1C] text-xs font-bold rounded-md block w-64 p-2.5">
-    
-                    <option value="">Tüm Kategoriler</option>
-    
-                    @if (ViewBag.Categories != null)
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest">Kategori</label>
+                <select id="catFilter" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-[#332A1C] text-xs font-bold rounded-md block w-40 p-2">
+                    <option value="">Tümü</option>
+                    @foreach (var cat in ViewBag.Categories as List<ResultCategoryDTO>)
                     {
-                        foreach (var cat in ViewBag.Categories as List<ResultCategoryDTO>)
-                        {
-                            <option value="@cat.CategoryID" selected="@(ViewBag.SelectedCategory == cat.CategoryID)">
-                                @cat.CategoryName.ToUpper()
-                            </option>
-                        }
+                        <option value="@cat.CategoryID" selected="@(ViewBag.SelectedCategory == cat.CategoryID)">@cat.CategoryName.ToUpper()</option>
                     }
                 </select>
             </div>
-            <a asp-action="CreatePublisher" class="flex items-center gap-2 bg-[#D4A373] text-[#332A1C] px-5 py-2.5 rounded text-[11px] font-black uppercase tracking-widest hover:bg-[#E9C46A] transition-all active:scale-95 shadow-md">
-                <span class="material-symbols-outlined text-[18px]">add_circle</span> Yeni Yayıncı Ekle
+
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest">Durum</label>
+                <select id="statFilter" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-[#332A1C] text-xs font-bold rounded-md block w-32 p-2">
+                    <option value="">Tümü</option>
+                    <option value="true" selected="@(ViewBag.CurrentStatus?.ToString() == "True")">AKTİF</option>
+                    <option value="false" selected="@(ViewBag.CurrentStatus?.ToString() == "False")">PASİF</option>
+                </select>
+            </div>
+
+            <a asp-action="CreatePublisher" class="flex items-center gap-2 bg-[#D4A373] text-[#332A1C] px-5 py-2.5 rounded text-[11px] font-black uppercase tracking-widest hover:bg-[#E9C46A] transition-all shadow-md mt-4">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span> Ekle
             </a>
         </div>
     </div>
-
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -148,3 +150,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function applyFilters() {
+        var cat = document.getElementById('catFilter').value;
+        var stat = document.getElementById('statFilter').value;
+        location.href = '?categoryId=' + cat + '&status=' + stat;
+    }
+</script>

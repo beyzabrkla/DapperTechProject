@@ -10,11 +10,11 @@ namespace DapperTechProject.BusinessLayer.Abstract
 {
     public interface IPublisherRepository
     {
-        Task<List<ResultPublisherDTO>> GetPublishersWithCategoriesAsync(int pageNumber, int pageSize, int? categoryId); //Kategori bilgisiyle birlikte yayıncıları getiren metot
-        Task<Publisher> GetByIdPublisherAsync(int id); // ID'ye göre yayıncıyı getiren metot
-        Task<int> GetTotalPublisherCountAsync(int? categoryId); // Toplam yayıncı sayısını getiren metot
+        Task<List<ResultPublisherDTO>> GetPublishersWithCategoriesAsync(int pageNumber, int pageSize, int? categoryId, bool? status);
+        Task<int> GetTotalPublisherCountAsync(int? categoryId, bool? status); // Toplam yayıncı sayısını getiren metot
         Task CreatePublisherAsync(CreatePublisherDTO createPublisherDTO); 
         Task UpdatePublisherAsync(UpdatePublisherDTO updatePublisherDTO);
+        Task<Publisher> GetByIdPublisherAsync(int id); // ID'ye göre yayıncıyı getiren metot
         Task DeletePublisherAsync(int id);
     }
 }

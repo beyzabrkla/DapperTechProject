@@ -3,122 +3,90 @@ using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.BusinessLayer.Context;
 using DapperTechProject.DTOLayer.PublisherDTOs;
 using DapperTechProject.EntityLayer;
-using System.Data;
-using System.Diagnostics.Metrics;
 
 namespace DapperTechProject.BusinessLayer.Concrete
 {
     public class PublisherRepository : IPublisherRepository
     {
         private readonly DapperContext _context;
+        public PublisherRepository(DapperContext context) => _context = context;
 
-        public PublisherRepository(DapperContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<List<ResultPublisherDTO>> GetPublishersWithCategoriesAsync(int pageNumber, int pageSize, int? categoryId)
+        public async Task<List<ResultPublisherDTO>> GetPublishersWithCategoriesAsync(int pageNumber, int pageSize, int? categoryId, bool? status)
         {
             int offset = (pageNumber - 1) * pageSize;
 
-            // Kategori seçilmişse WHERE p.CategoryID = @catId şartını ekliyoruz
             string query = @"
-                SELECT p.PublisherID, p.WebsiteURL, p.CategoryID, c.CategoryName  
+                SELECT p.PublisherID, p.WebsiteURL, p.CategoryID, p.Status, c.CategoryName  
                 FROM Publishers p 
                 INNER JOIN Categories c ON p.CategoryID = c.CategoryID 
                 WHERE (@catId IS NULL OR p.CategoryID = @catId) 
+                  AND (@status IS NULL OR p.Status = @status)
                 ORDER BY p.PublisherID DESC 
                 OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@offset", offset);
-            parameters.Add("@pageSize", pageSize);
-            parameters.Add("@catId", categoryId);
-
             using (var connection = _context.CreateConnection())
             {
-                var values = await connection.QueryAsync<ResultPublisherDTO>(query, parameters);
-                return values.ToList();
+                return (await connection.QueryAsync<ResultPublisherDTO>(query,
+                    new { offset, pageSize, catId = categoryId, status })).ToList();
             }
         }
 
-        public async Task<Publisher> GetByIdPublisherAsync(int id)
+        public async Task<int> GetTotalPublisherCountAsync(int? categoryId, bool? status)
         {
-            string query = "Select * From Publishers where PublisherID=@id";
-            var parameters = new DynamicParameters();
-            parameters.Add("@id", id);
-            using (var connection = _context.CreateConnection())
-            {
-                return await connection.QueryFirstOrDefaultAsync<Publisher>(query, parameters);
-            }
-        }
+            string query = @"SELECT COUNT(*) FROM Publishers 
+                     WHERE (@catId IS NULL OR CategoryID = @catId)
+                       AND (@status IS NULL OR Status = @status)";
 
-        public async Task<int> GetTotalPublisherCountAsync(int? categoryId)
-        {
-            string query = "Select count(*) From Publishers where (@catId IS NULL OR CategoryID = @catId)"; // Kategori seçilmişse sadece o kategoriye ait yayıncıları, seçilmediyse tüm yayıncıları sayıyoruz
-            var parameters = new DynamicParameters();
-            parameters.Add("@catId", categoryId);
             using (var connection = _context.CreateConnection())
             {
-                var totalCount = await connection.QueryFirstOrDefaultAsync<int>(query, parameters); // Toplam kayıt sayısını döndürüyoruz
-                return totalCount;
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { catId = categoryId, status });
             }
         }
 
         public async Task CreatePublisherAsync(CreatePublisherDTO createPublisherDTO)
         {
-            string query = "Insert into Publishers (WebsiteURL, CategoryID) values (@websiteUrl, @categoryId)";
-
+            string query = "INSERT INTO Publishers (WebsiteURL, CategoryID, Status) VALUES (@url, @catId, @status)";
             using (var connection = _context.CreateConnection())
             {
-                if (connection.State == ConnectionState.Closed)
+                await connection.ExecuteAsync(query, new
                 {
-                    connection.Open();
-                }
-
-                var parameters = new DynamicParameters();
-                parameters.Add("@websiteUrl", createPublisherDTO.WebsiteURL);
-                parameters.Add("@categoryId", createPublisherDTO.CategoryID);
-
-                await connection.ExecuteAsync(query, parameters);
+                    url = createPublisherDTO.WebsiteURL,
+                    catId = createPublisherDTO.CategoryID,
+                    status = createPublisherDTO.Status
+                });
             }
         }
 
         public async Task UpdatePublisherAsync(UpdatePublisherDTO updatePublisherDTO)
         {
-            string query = "UPDATE Publishers SET WebsiteURL=@websiteUrl, CategoryID=@categoryId WHERE PublisherID=@id";
-
+            string query = "UPDATE Publishers SET WebsiteURL=@url, CategoryID=@catId, Status=@status WHERE PublisherID=@id";
             using (var connection = _context.CreateConnection())
             {
-                if (connection.State == ConnectionState.Closed)
+                await connection.ExecuteAsync(query, new
                 {
-                    connection.Open();
-                }
+                    url = updatePublisherDTO.WebsiteURL,
+                    catId = updatePublisherDTO.CategoryID,
+                    status = updatePublisherDTO.Status,
+                    id = updatePublisherDTO.PublisherID
+                });
+            }
+        }
 
-                var parameters = new DynamicParameters();
-                parameters.Add("@websiteUrl", updatePublisherDTO.WebsiteURL);
-                parameters.Add("@categoryId", updatePublisherDTO.CategoryID);
-                parameters.Add("@id", updatePublisherDTO.PublisherID);
-
-                await connection.ExecuteAsync(query, parameters);
+        public async Task<Publisher> GetByIdPublisherAsync(int id)
+        {
+            string query = "SELECT * FROM Publishers WHERE PublisherID=@id";
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<Publisher>(query, new { id });
             }
         }
 
         public async Task DeletePublisherAsync(int id)
         {
-            string query = "Delete from Publishers where PublisherID=@id";
-
+            string query = "DELETE FROM Publishers WHERE PublisherID=@id";
             using (var connection = _context.CreateConnection())
             {
-                if (connection.State == ConnectionState.Closed)
-                {
-                    connection.Open();
-                }
-
-                var parameters = new DynamicParameters();
-                parameters.Add("@id", id);
-
-                await connection.ExecuteAsync(query, parameters);
+                await connection.ExecuteAsync(query, new { id });
             }
         }
     }

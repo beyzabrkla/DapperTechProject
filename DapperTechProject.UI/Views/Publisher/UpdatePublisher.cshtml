@@ -54,6 +54,25 @@
                             }
                         </select>
                     </div>
+                    <div class="grid grid-cols-1 gap-md mt-6">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 border border-outline-variant rounded-lg">
+                            <div>
+                                <p class="font-body-sm text-on-surface font-bold">Erişim Durumu</p>
+                                <p class="text-[11px] text-slate-500">Yayıncının ağdaki görünürlüğünü kontrol edin.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" asp-for="Status" class="sr-only peer">
+                                <div class="w-11 h-6 bg-stone-300 rounded-full
+                                    peer peer-checked:after:translate-x-full
+                                    peer-checked:after:border-white
+                                    after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                    after:bg-white after:border-gray-300 after:border after:rounded-full
+                                    after:h-5 after:w-5 after:transition-all
+                                    peer-checked:bg-[#332A1C]">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

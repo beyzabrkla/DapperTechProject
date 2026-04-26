@@ -22,7 +22,7 @@
                 <p class="font-body-md text-on-surface-variant mt-1">#@Model.CategoryID kimlikli kategorinin sistem ayarlarını güncelleyin.</p>
             </div>
             <div class="flex gap-md">
-                <a asp-action="Index" class="px-md py-sm font-label-caps border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors rounded uppercase">İptal</a>
+                <a asp-action="CategoryList" class="px-md py-sm font-label-caps border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors rounded uppercase">İptal</a>
                 <button type="submit" class="px-md py-sm font-label-caps bg-primary text-white hover:bg-stone-800 transition-colors rounded uppercase shadow-sm flex items-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">published_with_changes</span> Değişiklikleri Uygula
                 </button>
@@ -66,10 +66,14 @@
                     <div class="flex items-center justify-between p-md bg-stone-50 rounded">
                         <div>
                             <p class="font-body-md text-stone-900 font-bold">Kategori Aktif</p>
+                            <p class="text-[11px] text-stone-500">Sistem genelinde erişilebilirlik.</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked class="sr-only peer">
-                            <div class="w-11 h-6 bg-stone-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            <input type="checkbox" asp-for="Status" class="sr-only peer">
+                            <div class="w-11 h-6 bg-stone-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
+                                after:h-5 after:w-5 after:transition-all
+                                peer-checked:bg-[#332A1C]">
+                            </div>
                         </label>
                     </div>
                 </div>
