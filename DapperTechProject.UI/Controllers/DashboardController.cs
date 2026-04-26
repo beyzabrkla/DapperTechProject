@@ -9,7 +9,9 @@ namespace DapperTechProject.UI.Controllers
         private readonly ICampaignRepository _campaignRepository;
         private readonly ICategoryRepository _categoryRepository;
 
-        public DashboardController(IAdImpressionRepository adImpressionRepository, ICampaignRepository campaignRepository, ICategoryRepository categoryRepository)
+        public DashboardController(IAdImpressionRepository adImpressionRepository,
+                                   ICampaignRepository campaignRepository,
+                                   ICategoryRepository categoryRepository)
         {
             _adImpressionRepository = adImpressionRepository;
             _campaignRepository = campaignRepository;
@@ -18,12 +20,47 @@ namespace DapperTechProject.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.TotalImpressions = 1000000; // Şimdilik statik veya Count metoduyla
-            ViewBag.TotalClicks = await _adImpressionRepository.GetTotalClickCountAsync();
-            ViewBag.CampaignCount = (await _campaignRepository.GetCampaignsPagedAsync(1, 100, null, null, null)).Count;
-            ViewBag.CategoryCount = (await _categoryRepository.GetCategoriesPagedAsync(1, 100, null)).Count;
+            //Genel İstatistikler (AdImpressionRepository üzerinden)
+            var totalImpressions = await _adImpressionRepository.GetTotalAdImpressionCountAsync(); //Tüm log sayısı
+            var totalClicks = await _adImpressionRepository.GetTotalClickCountAsync(); //toplam tıklanma sayısı
 
-            return View();
+            ViewBag.TotalImpressions = totalImpressions.ToString("N0");
+            ViewBag.TotalClicks = totalClicks.ToString("N0");
+            ViewBag.CTR = totalImpressions > 0 ? ((double)totalClicks / totalImpressions * 100).ToString("F2") : "0";
+
+            //Kampanya ve Kategori Sayıları
+            ViewBag.CampaignCount = await _campaignRepository.GetTotalCampaignCountAsync(); // Toplam kampanya sayısı
+            ViewBag.CategoryCount = await _categoryRepository.GetTotalCategoryCountAsync(null); // Toplam kategori sayısı tüm kategoriler filtre yok)
+
+            // Grafik Verileri Bölge Performansı
+            var regionStats = await _adImpressionRepository.GetRegionPerformanceAsync();
+            ViewBag.RegionLabels = regionStats.Select(x => (string)x.RegionName).ToList();
+            ViewBag.RegionClickData = regionStats.Select(x => (int)x.TotalClicks).ToList();
+
+            //Harcama Analizi 
+            var topCampaigns = await _adImpressionRepository.GetTopSpendingCampaignsAsync();
+            ViewBag.TopCampaignLabels = topCampaigns.Select(x => (string)x.CampaignName).ToList();
+            ViewBag.TopCampaignSpends = topCampaigns.Select(x => (decimal)x.TotalSpend).ToList();
+
+            //Alt Tablo İçin Kampanya Listesi
+            var campaigns = await _campaignRepository.GetCampaignsPagedAsync(1, 10);
+
+            //En Verimli Yayıncılar (Tıklama başına en düşük maliyet getirenler)
+            var topPublishers = await _adImpressionRepository.GetTopEfficiencyPublishersAsync();
+            ViewBag.PubLabels = topPublishers.Select(x => x.WebsiteURL).ToList();
+            ViewBag.PubEfficiency = topPublishers.Select(x => x.AvgCPC).ToList();
+
+            //Kategori Bazlı Dağılım (Hangi kategori ne kadar gösterim aldı?)
+            var categoryStats = await _adImpressionRepository.GetCategoryDistributionAsync();
+            ViewBag.CatLabels = categoryStats.Select(x => x.CategoryName).ToList();
+            ViewBag.CatData = categoryStats.Select(x => x.ImpressionCount).ToList();
+
+            //Ortalama Tıklama Maliyeti (Global Metrik)
+            var avgCpc = await _adImpressionRepository.GetGlobalAvgCPCAsync();
+            ViewBag.AvgCPC = avgCpc.ToString("C2");
+
+            return View(campaigns);
+
         }
     }
 }
