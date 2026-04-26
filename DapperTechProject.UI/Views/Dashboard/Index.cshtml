@@ -1,139 +1,187 @@
-﻿@{
+﻿@using DapperTechProject.DTOLayer.CampaignDTOs
+@model List<ResultCampaignDTO>
+
+@{
     ViewData["Title"] = "Analiz Paneli";
     Layout = "_Layout";
 }
 
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all rounded-lg">
         <div class="flex justify-between items-start mb-4">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">TOPLAM GÖSTERİM</span>
-            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold">+%12.5</span>
+            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold">+12%</span>
         </div>
-        <div class="flex items-baseline gap-2">
-            <h2 class="text-3xl font-bold text-slate-900">@ViewBag.TotalImpressions</h2>
-            <span class="text-xs text-slate-400">geçen aya göre</span>
-        </div>
+        <h2 class="text-3xl font-bold text-slate-900">@ViewBag.TotalImpressions</h2>
         <div class="mt-6 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
             <div class="h-full bg-slate-900" style="width: 72%;"></div>
         </div>
     </div>
 
-    <div class="bg-white p-6 border border-slate-200 shadow-sm">
+    <div class="bg-white p-6 border border-slate-200 shadow-sm rounded-lg">
         <div class="flex justify-between items-start mb-4">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">REKLAM TIKLAMALARI</span>
-            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold">+%4.2</span>
+            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold">+4.2%</span>
         </div>
-        <div class="flex items-baseline gap-2">
-            <h2 class="text-3xl font-bold text-slate-900">@ViewBag.TotalClicks</h2>
-            <span class="text-xs text-slate-400">Hedef: 40K</span>
-        </div>
-        <div class="mt-6 flex items-end gap-1 h-8">
-            <div class="flex-1 bg-slate-400 opacity-30 h-[20%]"></div>
-            <div class="flex-1 bg-slate-400 opacity-40 h-[40%]"></div>
-            <div class="flex-1 bg-slate-400 opacity-60 h-[70%]"></div>
-            <div class="flex-1 bg-slate-600 h-[100%]"></div>
-            <div class="flex-1 bg-slate-400 opacity-80 h-[85%]"></div>
+        <h2 class="text-3xl font-bold text-slate-900">@ViewBag.TotalClicks</h2>
+        <div class="mt-6 flex items-end gap-1 h-2">
+            <div class="flex-1 bg-slate-200 h-[40%]"></div>
+            <div class="flex-1 bg-slate-300 h-[70%]"></div>
+            <div class="flex-1 bg-slate-900 h-[100%]"></div>
         </div>
     </div>
 
-    <div class="bg-white p-6 border border-slate-200 shadow-sm">
+    <div class="bg-white p-6 border border-slate-200 shadow-sm rounded-lg">
         <div class="flex justify-between items-start mb-4">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">TIKLAMA ORANI (CTR)</span>
-            <span class="text-red-600 bg-red-50 px-2 py-0.5 rounded text-[10px] font-bold">-%0.12</span>
+            <span class="text-slate-500 bg-slate-50 px-2 py-0.5 rounded text-[10px] font-bold">Verim</span>
         </div>
-        <div class="flex items-baseline gap-2">
-            <h2 class="text-3xl font-bold text-slate-900">%4.03</h2>
-            <span class="text-xs text-slate-400">Ortalama: %3.9</span>
+        <h2 class="text-3xl font-bold text-slate-900">%@ViewBag.CTR</h2>
+        <p class="text-[10px] text-slate-400 mt-4 italic">Aktif Kampanya: @ViewBag.CampaignCount</p>
+    </div>
+
+    <div class="bg-white p-6 border border-slate-200 shadow-sm rounded-lg border-l-4 border-l-slate-900">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">ORT. TIKLAMA MALİYETİ</span>
+            <span class="material-symbols-outlined text-slate-400 text-sm">payments</span>
         </div>
-        <div class="mt-6 grid grid-cols-2 gap-2">
-            <div class="text-[10px] text-slate-400 font-medium">Arama: %5.12</div>
-            <div class="text-[10px] text-slate-400 text-right font-medium">Görüntülü: %2.94</div>
+        <h2 class="text-3xl font-bold text-slate-900">@ViewBag.AvgCPC</h2>
+        <p class="text-[10px] text-slate-400 mt-4 italic">Kategori Sayısı: @ViewBag.CategoryCount</p>
+    </div>
+</section>
+
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+    <div class="lg:col-span-7 bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-6 uppercase tracking-widest">En Çok Harcama Yapan Kampanyalar (₺)</h3>
+        <div class="h-[300px]">
+            <canvas id="spendingChart"></canvas>
+        </div>
+    </div>
+
+    <div class="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-6 uppercase tracking-widest">Bölgesel Tıklama Dağılımı</h3>
+        <div class="h-[300px]">
+            <canvas id="regionChart"></canvas>
         </div>
     </div>
 </section>
 
 <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-    <div class="lg:col-span-8 bg-white border border-slate-200 p-6">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h3 class="text-lg font-bold text-slate-900">Küresel Dağılım</h3>
-                <p class="text-xs text-slate-400">Coğrafi konuma göre gerçek zamanlı performans</p>
-            </div>
-            <div class="flex gap-2">
-                <button class="px-3 py-1 text-xs border border-slate-200 bg-white hover:bg-slate-50 transition-colors">Haftalık</button>
-                <button class="px-3 py-1 text-xs border border-slate-900 bg-slate-900 text-white">Aylık</button>
-            </div>
-        </div>
-        <div class="relative aspect-[21/9] bg-slate-50 flex items-center justify-center group overflow-hidden border border-dashed border-slate-200">
-            <div class="z-10 text-slate-200 opacity-50 font-black text-6xl tracking-[2rem] select-none uppercase">DÜNYA</div>
-            <div class="absolute top-[20%] left-[45%] w-4 h-4 bg-slate-600 rounded-full animate-pulse border-4 border-white shadow-lg"></div>
-            <div class="absolute top-[40%] left-[48%] w-3 h-3 bg-slate-400 rounded-full border-2 border-white opacity-40"></div>
+    <div class="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-6 uppercase tracking-widest">Sektörel Gösterim Dağılımı</h3>
+        <div class="h-[350px]">
+            <canvas id="categoryRadarChart"></canvas>
         </div>
     </div>
 
-    <div class="lg:col-span-4 bg-white border border-slate-200 p-6">
-        <h3 class="text-lg font-bold text-slate-900 mb-6">Bölgesel Kıyaslama</h3>
-        <div class="space-y-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-5 bg-slate-100 flex items-center justify-center text-[10px] font-bold border border-slate-200">TR</span>
-                    <span class="text-sm font-medium">Türkiye</span>
-                </div>
-                <span class="text-sm font-bold text-slate-900">156K</span>
-            </div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-5 bg-slate-100 flex items-center justify-center text-[10px] font-bold border border-slate-200">US</span>
-                    <span class="text-sm font-medium">Amerika B.D.</span>
-                </div>
-                <span class="text-sm font-bold text-slate-900">342K</span>
-            </div>
+    <div class="lg:col-span-7 bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-6 uppercase tracking-widest">En Uygun Maliyetli Yayıncılar (Avg. CPC)</h3>
+        <div class="h-[350px]">
+            <canvas id="publisherEffChart"></canvas>
         </div>
-        <button class="mt-8 w-full text-xs font-bold text-slate-600 border border-slate-200 py-3 hover:bg-slate-50 transition-colors uppercase tracking-widest">Tam Raporu İndir</button>
     </div>
 </section>
 
-<section class="bg-white border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-6 flex justify-between items-center border-b border-slate-100">
-        <h3 class="text-lg font-bold text-slate-900">Aktif Kampanyalar</h3>
-        <div class="flex gap-4">
-            <button class="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-900 transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 16px;">filter_list</span> Filtrele
-            </button>
-            <button class="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-900 transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 16px;">file_download</span> CSV Dışa Aktar
-            </button>
-        </div>
+<section class="bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
+    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <h3 class="text-lg font-bold text-slate-900">Son Aktif Kampanyalar</h3>
+        <a href="/Campaign/Index" class="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-tighter">Tümünü Yönet →</a>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50 border-b border-slate-100">
-                <tr>
-                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">KAMPANYA ADI</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">DURUM</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">GÖSTERİM</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">MALİYET</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">İŞLEM</th>
+            <thead>
+                <tr class="bg-slate-50">
+                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kampanya & Bölge</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Müşteri</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Bütçe</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-slate-900">Yaz Fırsatları Q3 - Arama</span>
-                            <span class="text-[10px] text-slate-400 font-medium">ID: CP-29401</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Yayında</span>
-                    </td>
-                    <td class="px-6 py-4 text-right text-sm font-semibold text-slate-700">245.901</td>
-                    <td class="px-6 py-4 text-right text-sm font-semibold text-slate-700">₺12.402,50</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="material-symbols-outlined text-slate-300 cursor-pointer hover:text-slate-900">more_vert</span>
-                    </td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-bold text-slate-900">@item.CampaignName</div>
+                            <div class="text-[10px] text-slate-400 font-medium">@item.RegionName</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600">@item.ClientName</td>
+                        <td class="px-6 py-4 text-right font-bold text-slate-800 text-sm">
+                            ₺@item.Budget?.ToString("N2")
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </section>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 1. Harcama Analizi (Bar)
+        new Chart(document.getElementById('spendingChart'), {
+        type: 'bar',
+        data: {
+        labels: @Html.Raw(Json.Serialize(ViewBag.TopCampaignLabels)),
+        datasets: [{
+        label: 'Toplam Harcama (₺)',
+        data: @Html.Raw(Json.Serialize(ViewBag.TopCampaignSpends)),
+        backgroundColor: '#1e293b',
+        borderRadius: 6
+        }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // 2. Bölge Analizi (Doughnut)
+        new Chart(document.getElementById('regionChart'), {
+        type: 'doughnut',
+        data: {
+        labels: @Html.Raw(Json.Serialize(ViewBag.RegionLabels)),
+        datasets: [{
+        data: @Html.Raw(Json.Serialize(ViewBag.RegionClickData)),
+        backgroundColor: ['#0f172a', '#334155', '#64748b', '#94a3b8', '#cbd5e1'],
+        borderWidth: 4,
+        borderColor: '#ffffff'
+        }]
+        },
+        options: { cutout: '75%', responsive: true, maintainAspectRatio: false }
+        });
+
+        // 3. Kategori Radar Chart
+        new Chart(document.getElementById('categoryRadarChart'), {
+        type: 'radar',
+        data: {
+        labels: @Html.Raw(Json.Serialize(ViewBag.CatLabels)),
+        datasets: [{
+        label: 'Gösterim Hacmi',
+        data: @Html.Raw(Json.Serialize(ViewBag.CatData)),
+        backgroundColor: 'rgba(15, 23, 42, 0.1)',
+        borderColor: '#0f172a',
+        pointBackgroundColor: '#0f172a'
+        }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // 4. Yayıncı Verimliliği (Horizontal Bar)
+        new Chart(document.getElementById('publisherEffChart'), {
+        type: 'bar',
+        data: {
+        labels: @Html.Raw(Json.Serialize(ViewBag.PubLabels)),
+        datasets: [{
+        label: 'Ort. CPC (₺)',
+        data: @Html.Raw(Json.Serialize(ViewBag.PubEfficiency)),
+        backgroundColor: '#475569',
+        borderRadius: 4
+        }]
+        },
+        options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+        }
+        });
+    </script>
+}

@@ -76,7 +76,21 @@ namespace DapperTechProject.BusinessLayer.Concrete
             }
         }
 
-        public async Task<int> GetFilteredCountAsync(int? regionId, bool? isClicked, int? campaignId, int? publisherId)
+        public async Task<List<dynamic>> GetCategoryDistributionAsync() //Kategori bazlı dağılım (Hangi kategori ne kadar gösterim aldı?)
+        {
+            string query = @"SELECT C.CategoryName, COUNT(AI.ImpressionID) as ImpressionCount
+                         FROM AdImpressions AI
+                         INNER JOIN Publishers P ON AI.PublisherID = P.PublisherID
+                         INNER JOIN Categories C ON P.CategoryID = C.CategoryID
+                         GROUP BY C.CategoryName
+                         ORDER BY ImpressionCount DESC";
+            using (var connection = _context.CreateConnection())
+            {
+                return (await connection.QueryAsync<dynamic>(query)).ToList();
+            }
+        }
+
+        public async Task<int> GetFilteredCountAsync(int? regionId, bool? isClicked, int? campaignId, int? publisherId) // Filtrelenmiş gösterim sayısı (örneğin, belirli bir bölgede kaç gösterim var veya tıklanma oranı nedir gibi)
         {
             using (var connection = _context.CreateConnection())
             {
@@ -96,12 +110,58 @@ namespace DapperTechProject.BusinessLayer.Concrete
             }
         }
 
-        public Task<int> GetFilteredCountAsync(int? regionId, bool? isClicked)
+        public async Task<decimal> GetGlobalAvgCPCAsync() // Tüm tıklamalar için ortalama tıklama maliyeti
         {
-            throw new NotImplementedException();
+            string query = "SELECT ISNULL(AVG(CostPerClick), 0) FROM AdImpressions WHERE IsClicked = 1";
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<decimal>(query);
+            }
         }
 
-        public async Task<int> GetTotalAdImpressionCountAsync()
+        public async Task<List<dynamic>> GetRegionPerformanceAsync() // Bölge bazında performans (gösterim ve tıklama sayıları)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                string query = @"SELECT R.RegionName, 
+                         COUNT(AI.ImpressionID) as TotalImpressions,
+                         SUM(CAST(AI.IsClicked AS INT)) as TotalClicks
+                         FROM Regions R
+                         LEFT JOIN AdImpressions AI ON R.RegionID = AI.RegionID
+                         GROUP BY R.RegionName";
+                return (await connection.QueryAsync<dynamic>(query)).ToList();
+            }
+        }
+
+        public async Task<List<dynamic>> GetTopEfficiencyPublishersAsync() // Tıklama başına en düşük maliyet getiren yayıncılar
+        {
+            string query = @"SELECT TOP 5 P.WebsiteURL, AVG(AI.CostPerClick) as AvgCPC
+                         FROM AdImpressions AI
+                         INNER JOIN Publishers P ON AI.PublisherID = P.PublisherID
+                         WHERE AI.IsClicked = 1
+                         GROUP BY P.WebsiteURL
+                         ORDER BY AvgCPC ASC"; // En ucuz olan en verimlidir
+            using (var connection = _context.CreateConnection())
+            {
+                return (await connection.QueryAsync<dynamic>(query)).ToList();
+            }
+        }
+
+        public async Task<List<dynamic>> GetTopSpendingCampaignsAsync() // Tıklama başına en yüksek maliyet getiren kampanyalar (en çok harcama yapanlar)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                string query = @"SELECT TOP 5 C.CampaignName, SUM(AI.CostPerClick) as TotalSpend
+                         FROM Campaigns C
+                         JOIN AdImpressions AI ON C.CampaignID = AI.CampaignID
+                         WHERE AI.IsClicked = 1
+                         GROUP BY C.CampaignName
+                         ORDER BY TotalSpend DESC";
+                return (await connection.QueryAsync<dynamic>(query)).ToList();
+            }
+        }
+
+        public async Task<int> GetTotalAdImpressionCountAsync() // Tüm log sayısı
         {
             string query = "SELECT COUNT(*) FROM AdImpressions";
             using (var connection = _context.CreateConnection())
@@ -110,7 +170,7 @@ namespace DapperTechProject.BusinessLayer.Concrete
             }
         }
 
-        public async Task<int> GetTotalClickCountAsync()
+        public async Task<int> GetTotalClickCountAsync() // Toplam tıklanma sayısı
         {
             string query = "SELECT COUNT(*) FROM AdImpressions WHERE IsClicked = 1";
 
