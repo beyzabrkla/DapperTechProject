@@ -9,106 +9,126 @@
         <h2 class="font-h1 text-h1 text-primary">Kategori Yönetimi</h2>
         <p class="font-body-md text-on-surface-variant">Reklam segmentlerini sınıflandırın ve performanslarını izleyin.</p>
     </div>
-    <a asp-action="CreateCategory" class="bg-primary-container text-white px-md py-sm rounded-lg flex items-center gap-2 hover:bg-stone-800 transition-all shadow-sm">
-        <span class="material-symbols-outlined text-[20px]">add_circle</span>
-        <span class="font-body-md font-semibold">Yeni Kategori</span>
-    </a>
+    <div class="flex items-center gap-3">
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest pl-1">Durum Filtresi</label>
+            <select onchange="window.location.href='?status=' + this.value"
+                    class="bg-white border border-stone-200 text-[#332A1C] text-xs font-bold rounded-lg py-2 px-4 focus:ring-2 focus:ring-[#332A1C] outline-none shadow-sm">
+                <option value="">TÜMÜ</option>
+                <option value="true" selected="@(ViewBag.CurrentStatus?.ToString() == "True")">AKTİF</option>
+                <option value="false" selected="@(ViewBag.CurrentStatus?.ToString() == "False")">PASİF</option>
+            </select>
+        </div>
+
+        <a asp-action="CreateCategory" class="bg-[#332A1C] text-[#D4A373] px-md py-3 rounded-lg flex items-center gap-2 hover:bg-stone-800 transition-all shadow-md mt-auto">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span class="font-body-md font-semibold text-[11px] uppercase tracking-widest">Yeni Kategori</span>
+        </a>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-md mb-lg">
     <div class="bg-white border border-stone-100 p-md rounded-xl shadow-sm flex flex-col justify-between">
         <div>
-            <span class="font-label-caps text-on-surface-variant uppercase">Toplam Kategori</span>
+            <span class="font-label-caps text-stone-400 uppercase text-[10px] font-black tracking-widest">Genel Envanter</span>
             <div class="flex items-baseline gap-2 mt-sm">
-                <span class="font-h1 text-[32px]">@Model.Count</span>
-                <span class="text-secondary text-[12px] font-bold">+3 bu ay</span>
+                <span class="font-h1 text-[32px] font-black text-[#332A1C]">@ViewBag.GrandTotal</span>
+                <span class="text-stone-400 text-[11px] font-bold uppercase">Kategori</span>
             </div>
         </div>
         <div class="mt-md pt-md border-t border-stone-50 flex items-center gap-2 text-stone-400">
-            <span class="material-symbols-outlined text-[16px]">update</span>
-            <span class="text-[10px] font-medium">Az önce güncellendi</span>
+            <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+            <span class="text-[10px] font-medium uppercase tracking-tight">Tüm Kayıtlar Listelendi</span>
         </div>
     </div>
     
     <div class="bg-white border border-stone-100 p-md rounded-xl shadow-sm col-span-1 md:col-span-2 flex items-center justify-between overflow-hidden relative">
-        <div class="z-10">
-            <span class="font-label-caps text-on-surface-variant uppercase">En Çok Tercih Edilen</span>
+        <div class="z-10 px-2">
+            <span class="font-label-caps text-stone-400 uppercase text-[10px] font-black tracking-widest">En Popüler Segment</span>
             <div class="mt-sm">
-                <span class="font-h1 text-[24px] text-tertiary">Teknoloji & Yazılım</span>
-                <p class="font-body-sm text-secondary mt-1">Global pazar payının %24.8'i</p>
+                <span class="font-h1 text-[26px] text-[#332A1C] font-black tracking-tight">@(Model.FirstOrDefault()?.CategoryName?.ToUpper() ?? "VERİ YOK")</span>
+                <p class="font-body-sm text-stone-500 mt-1 text-[12px]">Reklam ağındaki yayıncıların en yoğun olduğu kategori.</p>
             </div>
         </div>
-        <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-secondary-container/20 to-transparent"></div>
-        <div class="z-10 bg-secondary-container/40 p-4 rounded-full mr-4">
-            <span class="material-symbols-outlined text-[40px] text-secondary">trending_up</span>
+        <div class="z-10 bg-[#D4A373]/10 p-5 rounded-2xl mr-4 border border-[#D4A373]/20">
+            <span class="material-symbols-outlined text-[42px] text-[#332A1C]">equalizer</span>
+        </div>
+        <div class="absolute -right-4 -bottom-4 opacity-[0.03] pointer-events-none">
+            <span class="material-symbols-outlined text-[120px]">trending_up</span>
         </div>
     </div>
 
-    <div class="bg-primary-container text-white p-md rounded-xl shadow-sm flex flex-col justify-center">
-        <span class="font-label-caps text-on-primary-container uppercase">Ağ Verimliliği</span>
-        <span class="font-h1 text-[32px] mt-sm">94.2%</span>
-        <div class="w-full bg-white/10 h-1.5 rounded-full mt-md overflow-hidden">
-            <div class="bg-secondary-fixed-dim h-full w-[94.2%]"></div>
+    <div class="bg-[#332A1C] text-white p-md rounded-xl shadow-lg flex flex-col justify-center border border-stone-800">
+        <div class="flex justify-between items-start">
+            <span class="font-label-caps text-[#D4A373] uppercase text-[10px] font-black tracking-widest">Aktif Durum</span>
+            <div class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-[9px] font-bold text-green-400 uppercase">Live</span>
+            </div>
+        </div>
+        
+        <div class="flex items-baseline gap-2 mt-sm">
+            <span class="font-h1 text-[32px] font-black text-white">@ViewBag.ActiveCount</span>
+            <span class="text-[11px] text-stone-500 font-bold">/ @ViewBag.GrandTotal</span>
+        </div>
+
+        <div class="w-full bg-white/5 h-2 rounded-full mt-md overflow-hidden border border-white/5">
+            <div class="bg-[#D4A373] h-full shadow-[0_0_10px_rgba(212,163,115,0.4)] transition-all duration-1000"
+                 style="width: @(ViewBag.GrandTotal > 0 ? (ViewBag.ActiveCount * 100 / ViewBag.GrandTotal) : 0)%">
+            </div>
+        </div>
+        
+        <div class="flex justify-between items-center mt-3">
+            <span class="text-[9px] text-stone-400 font-bold uppercase tracking-tighter">Sistem Kapasitesi</span>
+            <span class="text-[10px] text-[#D4A373] font-black">%@(ViewBag.GrandTotal > 0 ? (ViewBag.ActiveCount * 100 / ViewBag.GrandTotal) : 0)</span>
         </div>
     </div>
-</div>
-
-<div class="bg-white border border-stone-200 p-md rounded-xl mb-md flex flex-wrap items-center gap-md">
-    <div class="flex-1 min-w-[300px] relative">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[20px]">search</span>
-        <input class="w-full pl-10 pr-4 py-2 bg-stone-50 border-none rounded-lg font-body-md focus:ring-2 focus:ring-primary-container text-on-surface" placeholder="Kategori ara..." type="text" />
-    </div>
-    <div class="flex items-center gap-3">
-        <label class="font-label-caps text-stone-500 whitespace-nowrap uppercase">Durum:</label>
-        <select class="bg-stone-50 border-none rounded-lg py-2 pl-4 pr-10 font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container">
-            <option>Tümü</option>
-            <option>Aktif</option>
-            <option>Pasif</option>
-        </select>
-    </div>
-    <button class="flex items-center gap-2 px-md py-2 text-stone-600 hover:bg-stone-100 rounded-lg transition-colors font-body-sm font-semibold">
-        <span class="material-symbols-outlined text-[18px]">filter_alt</span>
-        Gelişmiş
-    </button>
 </div>
 
 <div class="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-sm">
     <table class="w-full text-left border-collapse">
         <thead class="bg-stone-50 border-b border-stone-200">
             <tr>
-                <th class="px-md py-3 font-label-caps text-stone-500 uppercase">Kategori Adı</th>
-                <th class="px-md py-3 font-label-caps text-stone-500 uppercase">Açıklama</th>
-                <th class="px-md py-3 font-label-caps text-stone-500 uppercase text-center">Durum</th>
-                <th class="px-md py-3 font-label-caps text-stone-500 uppercase text-right">İşlemler</th>
+                <th class="px-md py-4 font-label-caps text-stone-500 uppercase text-[10px] tracking-widest">Kategori Bilgisi</th>
+                <th class="px-md py-4 font-label-caps text-stone-500 uppercase text-[10px] tracking-widest">Açıklama</th>
+                <th class="px-md py-4 font-label-caps text-stone-500 uppercase text-center text-[10px] tracking-widest">Durum</th>
+                <th class="px-md py-4 font-label-caps text-stone-500 uppercase text-right text-[10px] tracking-widest">İşlemler</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-stone-100">
             @foreach (var item in Model)
             {
-                <tr class="hover:bg-stone-50 transition-colors group">
+                <tr class="hover:bg-stone-50/80 transition-colors group">
                     <td class="px-md py-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
-                                <span class="material-symbols-outlined text-[18px]">category</span>
+                            <div class="w-9 h-9 rounded-lg bg-[#332A1C] flex items-center justify-center text-[#D4A373] shadow-sm">
+                                <span class="material-symbols-outlined text-[20px]">category</span>
                             </div>
                             <div>
-                                <p class="font-body-md font-semibold text-primary">@item.CategoryName</p>
-                                <p class="text-[10px] text-stone-400">ID: #@item.CategoryID</p>
+                                <p class="font-bold text-[#332A1C] text-sm">@item.CategoryName.ToUpper()</p>
+                                <p class="text-[9px] text-stone-400 font-black tracking-tighter">ID: #@item.CategoryID</p>
                             </div>
                         </div>
                     </td>
                     <td class="px-md py-4">
-                        <p class="font-body-sm text-stone-600">Bu kategori aktif reklam ağında kullanılmaktadır.</p>
+                        <p class="text-stone-500 text-xs leading-relaxed">Bu segment altındaki yayıncılar için veri akışı @(item.Status ? "aktif" : "kapalı").</p>
                     </td>
                     <td class="px-md py-4 text-center">
-                        <span class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold uppercase rounded-full tracking-wider border border-secondary/10">Aktif</span>
+                        @if (item.Status)
+                        {
+                            <span class="px-3 py-1 bg-green-50 text-green-700 text-[10px] font-black uppercase rounded-full border border-green-200 shadow-sm">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="px-3 py-1 bg-red-50 text-red-700 text-[10px] font-black uppercase rounded-full border border-red-200 shadow-sm">Pasif</span>
+                        }
                     </td>
                     <td class="px-md py-4 text-right">
-                        <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a asp-action="UpdateCategory" asp-route-id="@item.CategoryID" class="p-1.5 hover:bg-stone-100 rounded-md text-stone-600 transition-colors" title="Düzenle">
-                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                        <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                            <a asp-action="UpdateCategory" asp-route-id="@item.CategoryID" class="p-2 hover:bg-stone-100 rounded-lg text-stone-600 transition-all" title="Düzenle">
+                                <span class="material-symbols-outlined text-[20px]">edit_square</span>
                             </a>
-                            <a asp-action="DeleteCategory" asp-route-id="@item.CategoryID" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="p-1.5 hover:bg-error/10 rounded-md text-error transition-colors" title="Sil">
+                            <a asp-action="DeleteCategory" asp-route-id="@item.CategoryID" onclick="return confirm('Uyarı: Bu işlem geri alınamaz. Devam edilsin mi?')" class="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-all" title="Sil">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </a>
                         </div>
@@ -117,11 +137,23 @@
             }
         </tbody>
     </table>
-    
+
     <div class="p-md bg-stone-50 flex items-center justify-between border-t border-stone-200">
-        <span class="font-body-sm text-stone-500">Toplam @Model.Count kayıt listeleniyor</span>
-        <div class="flex items-center gap-2">
-            <button class="w-8 h-8 flex items-center justify-center bg-primary-container text-white rounded font-body-sm font-bold">1</button>
+        <span class="font-body-sm text-stone-500 text-xs font-medium">
+            Gösterilen: <span class="text-[#332A1C] font-bold">@Model.Count</span> / Toplam: <span class="text-[#332A1C] font-bold">@ViewBag.TotalCount</span>
+        </span>
+        
+        <div class="flex items-center gap-1.5">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <a asp-action="CategoryList"
+                       asp-route-page="@i"
+                       asp-route-status="@ViewBag.CurrentStatus"
+                       class="min-w-[32px] h-8 flex items-center justify-center rounded-lg font-bold text-[11px] transition-all
+                    @(i == ViewBag.CurrentPage ? "bg-[#332A1C] text-white shadow-md" : "bg-white text-stone-600 border border-stone-200 hover:border-[#332A1C] hover:text-[#332A1C]")">
+                    @i
+                </a>
+            }
         </div>
     </div>
 </div>

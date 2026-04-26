@@ -9,5 +9,6 @@ namespace DapperTechProject.DTOLayer.CateogoryDTOs
     public class CreateCategoryDTO
     {
         public string CategoryName { get; set; }
+        public bool Status { get; set; }
     }
 }

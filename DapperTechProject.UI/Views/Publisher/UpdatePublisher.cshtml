@@ -1,8 +1,9 @@
-﻿@model GetByIdPublisherDTO
+﻿@using DapperTechProject.EntityLayer
+@model GetByIdPublisherDTO
 
 @{
     ViewData["Title"] = "Yayıncı Güncelle";
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="max-w-[800px] mx-auto space-y-md">
@@ -15,7 +16,7 @@
             <h1 class="font-h1 text-h1 text-on-surface">@Model.WebsiteURL</h1>
             <p class="font-body-md text-body-md text-on-surface-variant">Yayıncı kategori ve domain bilgilerini revize edin.</p>
         </div>
-        <a asp-action="Index" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
+        <a asp-action="PublisherList" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
             <span class="material-symbols-outlined text-[18px]">close</span> Vazgeç
         </a>
     </div>
@@ -36,17 +37,41 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                     <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Mevcut Kategori</label>
-                        <input type="text" asp-for="Category" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">
+                        <label class="font-body-sm text-on-surface font-semibold">Mevcut Kategori ID</label>
+                        <input type="text" value="@Model.CategoryID" readonly class="w-full border-outline-variant bg-slate-100 rounded font-body-sm h-11 px-4 outline-none">
                     </div>
                     <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Kategori Değiştir (ID)</label>
-                        <select asp-for="CategoryID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">
-                            <option value="1">Haber</option>
-                            <option value="2">E-Ticaret</option>
-                            <option value="3">Teknoloji</option>
-                            <option value="4">Blog</option>
+                        <label class="font-body-sm text-on-surface font-semibold">Yeni Kategori Seçin</label>
+                        <select asp-for="CategoryID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-[#D4A373] outline-none">
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.CategoryID" selected="@(cat.CategoryID == Model.CategoryID)">
+                                        @cat.CategoryName
+                                    </option>
+                                }
+                            }
                         </select>
+                    </div>
+                    <div class="grid grid-cols-1 gap-md mt-6">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 border border-outline-variant rounded-lg">
+                            <div>
+                                <p class="font-body-sm text-on-surface font-bold">Erişim Durumu</p>
+                                <p class="text-[11px] text-slate-500">Yayıncının ağdaki görünürlüğünü kontrol edin.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" asp-for="Status" class="sr-only peer">
+                                <div class="w-11 h-6 bg-stone-300 rounded-full
+                                    peer peer-checked:after:translate-x-full
+                                    peer-checked:after:border-white
+                                    after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                    after:bg-white after:border-gray-300 after:border after:rounded-full
+                                    after:h-5 after:w-5 after:transition-all
+                                    peer-checked:bg-[#332A1C]">
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

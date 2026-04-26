@@ -2,63 +2,63 @@
 @{
     ViewData["Title"] = "Yayıncı Ağı";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int totalCount = ViewBag.TotalCount ?? 0;
+    int pageSize = ViewBag.PageSize ?? 12;
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+
+    // Gösterilen kayıt aralığını hesapla
+    int startRecord = ((currentPage - 1) * pageSize) + 1;
+    int endRecord = Math.Min(currentPage * pageSize, totalCount);
 }
 
 <div class="grid grid-cols-12 gap-md mb-xl">
-    <div class="col-span-12 md:col-span-4 bg-white border border-slate-200 p-lg flex flex-col justify-between relative overflow-hidden shadow-sm">
-        <div class="relative z-10">
-            <p class="font-label-caps text-label-caps text-on-tertiary-fixed-variant uppercase opacity-60">Toplam Yayıncı Bakiyesi</p>
-            <h2 class="font-h1 text-[32px] font-extrabold text-[#332A1C] mt-2 tracking-tight">₺452.180,20</h2>
-            <div class="flex items-center gap-2 mt-4 text-emerald-600 font-bold text-xs">
-                <span class="material-symbols-outlined text-sm">trending_up</span>
-                <span>+12.4% vs Geçen Ay</span>
-            </div>
-        </div>
-        <div class="absolute -right-8 -bottom-8 opacity-5">
-            <span class="material-symbols-outlined text-[120px]">payments</span>
-        </div>
-    </div>
-
-    <div class="col-span-12 md:col-span-8 bg-white border border-slate-200 p-lg shadow-sm">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <p class="font-label-caps text-label-caps text-on-tertiary-fixed-variant uppercase opacity-60">Ağ Geneli Gösterim</p>
-                <h3 class="font-h2 text-h2 text-[#332A1C]">@Model.Count Aktif Kayıt</h3>
-            </div>
-            <div class="flex gap-2">
-                <button class="px-3 py-1 text-[11px] font-bold bg-[#F0F0F0] rounded uppercase">Rapor Al</button>
-            </div>
-        </div>
-        <div class="h-16 flex items-end gap-2">
-@*             @for (int i = 0; i < 15; i++) {
-                <div class="flex-1 bg-tertiary-container/10 h-[@ (new Random().Next(30, 95))%] rounded-t-sm hover:bg-tertiary-container/30 transition-colors cursor-pointer"></div>
-            } *@
-        </div>
-    </div>
 </div>
 
-<div class="bg-white border border-slate-200 shadow-sm overflow-hidden">
+<div class="bg-white border border-slate-200 shadow-sm overflow-hidden rounded-lg">
     <div class="px-lg py-md border-b border-slate-100 flex justify-between items-center bg-white">
-        <h3 class="font-h2 text-h2 text-primary">Yayıncı Ağı Yönetimi</h3>
+        <div>
+            <h3 class="text-lg font-bold text-[#332A1C]">Yayıncı Ağı Yönetimi</h3>
+            <p class="text-[11px] text-slate-400 uppercase tracking-widest font-semibold">
+                Toplam <span class="text-[#332A1C]">@ViewBag.TotalCount</span> kayıttan
+                @ViewBag.CurrentPage. sayfa gösteriliyor
+            </p>
+        </div>
+    
         <div class="flex items-center gap-sm">
-            <div class="relative">
-                <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
-                <input class="pl-9 pr-4 py-1.5 text-xs border-slate-200 rounded focus:ring-0 focus:border-[#332A1C] w-64" placeholder="Yayıncı ara..." type="text"/>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest">Kategori</label>
+                <select id="catFilter" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-[#332A1C] text-xs font-bold rounded-md block w-40 p-2">
+                    <option value="">Tümü</option>
+                    @foreach (var cat in ViewBag.Categories as List<ResultCategoryDTO>)
+                    {
+                        <option value="@cat.CategoryID" selected="@(ViewBag.SelectedCategory == cat.CategoryID)">@cat.CategoryName.ToUpper()</option>
+                    }
+                </select>
             </div>
-            <a asp-action="CreatePublisher" class="flex items-center gap-2 bg-[#332A1C] text-white px-4 py-2 rounded text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">
-                <span class="material-symbols-outlined text-[16px]">add_circle</span> Yeni Yayıncı Ekle
+
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest">Durum</label>
+                <select id="statFilter" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-[#332A1C] text-xs font-bold rounded-md block w-32 p-2">
+                    <option value="">Tümü</option>
+                    <option value="true" selected="@(ViewBag.CurrentStatus?.ToString() == "True")">AKTİF</option>
+                    <option value="false" selected="@(ViewBag.CurrentStatus?.ToString() == "False")">PASİF</option>
+                </select>
+            </div>
+
+            <a asp-action="CreatePublisher" class="flex items-center gap-2 bg-[#D4A373] text-[#332A1C] px-5 py-2.5 rounded text-[11px] font-black uppercase tracking-widest hover:bg-[#E9C46A] transition-all shadow-md mt-4">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span> Ekle
             </a>
         </div>
     </div>
-
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-200">
-                    <th class="px-lg py-3 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest">Yayıncı Kimliği</th>
-                    <th class="px-lg py-3 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest text-center">Kategori</th>
-                    <th class="px-lg py-3 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest text-center">Kategori ID</th>
-                    <th class="px-lg py-3 font-label-caps text-[10px] text-slate-500 uppercase tracking-widest text-right">İşlemler</th>
+                    <th class="px-lg py-4 font-bold text-[10px] text-slate-500 uppercase tracking-widest">Yayıncı Platformu</th>
+                    <th class="px-lg py-4 font-bold text-[10px] text-slate-500 uppercase tracking-widest text-center">Sektörel Kategori</th>
+                    <th class="px-lg py-4 font-bold text-[10px] text-slate-500 uppercase tracking-widest text-right">Yönetim</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -67,30 +67,27 @@
                     <tr class="hover:bg-slate-50/50 transition-colors group">
                         <td class="px-lg py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-white font-bold text-xs">
-                                    @item.WebsiteURL.Substring(0, 1).ToUpper()
+                                <div class="w-9 h-9 rounded-lg bg-[#332A1C] flex items-center justify-center text-[#D4A373] font-black text-sm shadow-sm">
+                                    @(string.IsNullOrEmpty(item.WebsiteURL) ? "P" : item.WebsiteURL.Substring(0, 1).ToUpper())
                                 </div>
                                 <div>
-                                    <p class="font-data-tabular text-data-tabular text-primary">@item.WebsiteURL</p>
-                                    <p class="text-[11px] text-slate-400">ID: #@item.PublisherID</p>
+                                    <p class="font-bold text-slate-800 text-sm">@item.WebsiteURL</p>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Sistem ID: #@item.PublisherID</p>
                                 </div>
                             </div>
                         </td>
                         <td class="px-lg py-4 text-center">
-                            <span class="px-2 py-0.5 rounded-full bg-secondary-container/50 text-on-secondary-container text-[10px] font-bold uppercase">
+                            <span class="px-3 py-1 rounded-full bg-[#D4A373]/10 text-[#332A1C] text-[10px] font-black uppercase border border-[#D4A373]/20">
                                 @item.CategoryName
                             </span>
                         </td>
-                        <td class="px-lg py-4 text-center font-data-tabular text-slate-500">
-                            #@item.CategoryID
-                        </td>
                         <td class="px-lg py-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <a asp-action="UpdatePublisher" asp-route-id="@item.PublisherID" class="p-1.5 text-slate-400 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined">edit_square</span>
+                            <div class="flex justify-end gap-1">
+                                <a asp-action="UpdatePublisher" asp-route-id="@item.PublisherID" class="p-2 text-slate-400 hover:text-[#332A1C] hover:bg-stone-100 rounded-md transition-all">
+                                    <span class="material-symbols-outlined text-[20px]">edit_note</span>
                                 </a>
-                                <a asp-action="DeletePublisher" asp-route-id="@item.PublisherID" onclick="return confirm('Emin misiniz?')" class="p-1.5 text-slate-400 hover:text-error transition-colors">
-                                    <span class="material-symbols-outlined">delete_sweep</span>
+                                <a asp-action="DeletePublisher" asp-route-id="@item.PublisherID" onclick="return confirm('Bu yayıncıyı ağdan çıkarmak istediğinize emin misiniz?')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
+                                    <span class="material-symbols-outlined text-[20px]">delete_sweep</span>
                                 </a>
                             </div>
                         </td>
@@ -100,12 +97,64 @@
         </table>
     </div>
 
-    <div class="px-lg py-3 flex justify-between items-center border-t border-slate-100 bg-slate-50">
-        <p class="text-[11px] text-slate-500 font-medium">Toplam @Model.Count yayıncı listeleniyor</p>
-        <div class="flex items-center gap-2">
-            <button class="p-1 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
-            <span class="text-[11px] font-bold px-2 py-0.5 bg-white border border-slate-200 rounded">1</span>
-            <button class="p-1 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+    <div class="px-lg py-4 flex justify-between items-center border-t border-slate-100 bg-slate-50/50">
+        <p class="text-[11px] text-slate-500 font-bold uppercase tracking-tight">Sayfa @currentPage / @totalPages</p>
+    
+        <div class="flex items-center gap-1">
+            @if (currentPage > 1)
+            {
+                <a asp-action="PublisherList" asp-route-page="@(currentPage - 1)" asp-route-categoryId="@ViewBag.SelectedCategory" class="p-2 text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-[#332A1C] hover:text-white transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </a>
+            }
+
+            <div class="flex gap-1 px-2">
+                @{
+                    int startPage = Math.Max(1, currentPage - 2);
+                    int endPage = Math.Min(totalPages, currentPage + 2);
+                }
+
+                @if (startPage > 1)
+                {
+                    <a asp-action="PublisherList" asp-route-page="1" class="px-3 py-1.5 text-[11px] font-black rounded-md border bg-white text-slate-600 border-slate-200">1</a>
+                    @if (startPage > 2)
+                    {
+                        <span class="px-1 text-slate-400">...</span>
+                    }
+                }
+
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <a asp-action="PublisherList" asp-route-page="@i"
+                           class="px-3 py-1.5 text-[11px] font-black rounded-md border transition-all @(currentPage == i ? "bg-[#332A1C] text-[#D4A373] border-[#332A1C]" : "bg-white text-slate-600 border-slate-200 hover:border-[#D4A373]")">
+                        @i
+                    </a>
+                }
+
+                @if (endPage < totalPages)
+                {
+                    @if (endPage < totalPages - 1)
+                    {
+                        <span class="px-1 text-slate-400">...</span>
+                    }
+                    <a asp-action="PublisherList" asp-route-page="@totalPages" asp-route-categoryId="@ViewBag.SelectedCategory"class ="px-3 py-1.5 text-[11px] font-black rounded-md border bg-white text-slate-600 border-slate-200">@totalPages</a>
+                }
+            </div>
+
+            @if (currentPage < totalPages)
+            {
+                <a asp-action="PublisherList" asp-route-page="@(currentPage + 1)" class="p-2 text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-[#332A1C] hover:text-white transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+            }
         </div>
     </div>
 </div>
+
+<script>
+    function applyFilters() {
+        var cat = document.getElementById('catFilter').value;
+        var stat = document.getElementById('statFilter').value;
+        location.href = '?categoryId=' + cat + '&status=' + stat;
+    }
+</script>

@@ -1,11 +1,14 @@
 using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.BusinessLayer.Concrete;
 using DapperTechProject.BusinessLayer.Context;
+using DapperTechProject.BusinessLayer.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAutoMapper(typeof(GeneralMapping));
 
 // Context Kaydı
 builder.Services.AddSingleton<DapperContext>();

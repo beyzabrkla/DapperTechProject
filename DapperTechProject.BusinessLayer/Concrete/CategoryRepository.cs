@@ -2,75 +2,99 @@
 using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.BusinessLayer.Context;
 using DapperTechProject.DTOLayer.CateogoryDTOs;
+using System.Data;
 
 namespace DapperTechProject.BusinessLayer.Concrete
 {
     public class CategoryRepository : ICategoryRepository
     {
         private readonly DapperContext _context;
+        public CategoryRepository(DapperContext context) => _context = context;
 
-        public CategoryRepository(DapperContext context)
+
+        public async Task<List<ResultCategoryDTO>> GetCategoriesPagedAsync(int page, int pageSize, bool? status, string search = null)
         {
-            _context = context;
+            var query = "SELECT * FROM Categories WHERE 1=1"; //her zaman doğru olan bir koşul ekleyerek dinamik sorgu oluşturmayı kolaylaştırıyoruz 
+
+            if (status.HasValue)
+                query += " AND Status = @status"; //kullanıcı tarafından statü sağlanmışsa, sorguya statü filtresi eklenir
+
+            if (!string.IsNullOrEmpty(search))
+                query += " AND CategoryName LIKE @search"; //kullanıcı tarafından arama kriteri sağlanmışsa, sorguya arama filtresi eklenir
+
+            query += " ORDER BY CategoryID DESC"; 
+
+            if (pageSize > 0)
+            {
+                query += " OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+            }
+
+            using (var connection = _context.CreateConnection())
+            {
+                return (await connection.QueryAsync<ResultCategoryDTO>(query, new
+                {
+                    status = status,
+                    search = $"%{search}%", //& içinde geçerse & sorguya ekle
+                    offset = (page - 1) * pageSize, //sayfalama için başlangıç noktasını hesapla eğer 2. sayfadaysan 12. kayıdı atla 13 ten başla
+                    pageSize = pageSize
+                })).ToList();
+            }
         }
 
-        public async Task<List<ResultCategoryDTO>> GetAllCategoriesAsync()
+        public async Task<int> GetTotalCategoryCountAsync(bool? status)
         {
-            string query = "select * from Categories";
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            string query = "SELECT COUNT(*) FROM Categories WHERE (@status IS NULL OR Status = @status)"; //Statü parametresi ile null olanlar veya belirli bir statüye sahip olanlar sayılacak
+
+            using (var connection = _context.CreateConnection())
             {
-                var categories = await connection.QueryAsync<ResultCategoryDTO>(query); // Sorguyu çalıştırarak sonuçları ResultCategoryDTO nesnelerine dönüştürüyoruz
-                return categories.ToList();
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { status });
             }
         }
 
         public async Task CreateCategoryAsync(CreateCategoryDTO createCategoryDTO)
         {
-            string query = "insert into Categories (CategoryName) values (@name)"; // SQL sorgusu, parametre olarak @Name kullanıyoruz
-            var parameters = new DynamicParameters(); // Dapper'ın DynamicParameters sınıfını kullanarak parametreleri oluşturuyoruz
-            parameters.Add("name", createCategoryDTO.CategoryName); // Parametreye createCategoryDTO'dan gelen CategoryName değerini ekliyoruz
-
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            // Status eklendi
+            string query = "INSERT INTO Categories (CategoryName, Status) VALUES (@name, @status)";
+            using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, parameters); // Sorguyu çalıştırarak yeni kategoriyi veritabanına ekliyoruz
+                await connection.ExecuteAsync(query, new
+                {
+                    name = createCategoryDTO.CategoryName,
+                    status = createCategoryDTO.Status
+                });
             }
         }
 
         public async Task<GetByIdCategoryDTO> GetCategoryByIdAsync(int id)
         {
-            string query = "select * from Categories where CategoryID = @id"; 
-            var parameters = new DynamicParameters();
-            parameters.Add("id", id); // Parametreye id değerini ekliyoruz
-
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            string query = "SELECT * FROM Categories WHERE CategoryID = @id";
+            using (var connection = _context.CreateConnection())
             {
-                //eğer kayıt varsa ilkini getirir, yoksa null döner
-                var category = await connection.QueryFirstOrDefaultAsync<GetByIdCategoryDTO>(query, parameters);
-                return category;
+                return await connection.QueryFirstOrDefaultAsync<GetByIdCategoryDTO>(query, new { id });
             }
         }
 
         public async Task UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDTO)
         {
-            string query = "update Categories set CategoryName = @name where CategoryID = @id"; 
-            var parameters = new DynamicParameters();
-            parameters.Add("name", updateCategoryDTO.CategoryName); // Parametreye updateCategoryDTO'dan gelen CategoryName değerini ekliyoruz
-            parameters.Add("id", updateCategoryDTO.CategoryID);
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            // Status güncellemesi eklendi
+            string query = "UPDATE Categories SET CategoryName = @name, Status = @status WHERE CategoryID = @id";
+            using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, parameters); // Sorguyu çalıştırarak kategoriyi güncelliyoruz
+                await connection.ExecuteAsync(query, new
+                {
+                    name = updateCategoryDTO.CategoryName,
+                    status = updateCategoryDTO.Status,
+                    id = updateCategoryDTO.CategoryID
+                });
             }
         }
 
         public async Task DeleteCategoryAsync(int id)
         {
-            string query = "Delete From Categories Where CategoryID = @id";
-            var parameters = new DynamicParameters();
-            parameters.Add("@id", id);
-
+            string query = "DELETE FROM Categories WHERE CategoryID = @id";
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, parameters);
+                await connection.ExecuteAsync(query, new { id });
             }
         }
     }

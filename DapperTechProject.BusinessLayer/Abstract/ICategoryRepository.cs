@@ -9,14 +9,12 @@ namespace DapperTechProject.BusinessLayer.Abstract
 {
     public interface ICategoryRepository
     {
-        Task<List<ResultCategoryDTO>> GetAllCategoriesAsync();
-
+        Task<List<ResultCategoryDTO>> GetCategoriesPagedAsync(int page, int pageSize, bool? status, string search = null);
+        Task<int> GetTotalCategoryCountAsync(bool? status);
         Task CreateCategoryAsync(CreateCategoryDTO createCategoryDTO);
-
+        Task<GetByIdCategoryDTO> GetCategoryByIdAsync(int id);
         Task UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDTO);
-
         Task DeleteCategoryAsync(int id);
 
-        Task<GetByIdCategoryDTO> GetCategoryByIdAsync(int id);
     }
 }
