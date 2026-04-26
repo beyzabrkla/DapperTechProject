@@ -20,7 +20,7 @@ namespace DapperTechProject.UI.Controllers
         {
             ViewBag.TotalImpressions = 1000000; // Şimdilik statik veya Count metoduyla
             ViewBag.TotalClicks = await _adImpressionRepository.GetTotalClickCountAsync();
-            ViewBag.CampaignCount = (await _campaignRepository.GetAllCampaignsAsync()).Count;
+            ViewBag.CampaignCount = (await _campaignRepository.GetCampaignsPagedAsync(1, 100, null, null, null)).Count;
             ViewBag.CategoryCount = (await _categoryRepository.GetCategoriesPagedAsync(1, 100, null)).Count;
 
             return View();

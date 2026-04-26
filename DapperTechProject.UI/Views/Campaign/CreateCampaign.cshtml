@@ -1,6 +1,8 @@
-﻿@model CreateCampaignDTO
+﻿@using DapperTechProject.DTOLayer.RegionDTOs
+@using DapperTechProject.DTOLayer.CampaignTypeDTOs
+@model CreateCampaignDTO
 @{
-    ViewData["Title"] = "Kampanya Formu";
+    ViewData["Title"] = "Yeni Kampanya";
     Layout = "_Layout";
 }
 
@@ -10,12 +12,12 @@
             <h1 class="font-h1 text-h1 text-on-surface">Yeni Kampanya Ekle</h1>
             <p class="font-body-md text-body-md text-on-surface-variant">Reklam ağları ve bütçe detaylarını buradan yönetebilirsiniz.</p>
         </div>
-        <a asp-action="Index" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
+        <a asp-action="CampaignList" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span> Listeye Dön
         </a>
     </div>
 
-    <form class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+    <form asp-action="CreateCampaign" method="post" class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
         <div class="p-xl space-y-lg">
             
             <div class="space-y-md">
@@ -24,60 +26,47 @@
                 <div class="grid grid-cols-1 gap-md">
                     <div class="space-y-1">
                         <label class="font-body-sm text-on-surface font-semibold">Kampanya Adı</label>
-                        <input type="text" placeholder="Örn: 2024 Yaz İndirimi" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        <input type="text" asp-for="CampaignName" placeholder="Örn: 2024 Yaz İndirimi" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary outline-none transition-all" required>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                     <div class="space-y-1">
                         <label class="font-body-sm text-on-surface font-semibold">Reklam Türü</label>
-                        <select class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                            <option>Arama Ağı</option>
-                            <option>Görüntülü Reklam</option>
-                            <option>Video</option>
-                            <option>Sosyal Medya</option>
+                        <select asp-for="TypeID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary outline-none">
+                            @foreach (var t in ViewBag.Types as List<ResultCampaignTypeDTO>)
+                            {
+                                <option value="@t.TypeID">@t.TypeName</option>
+                            }
                         </select>
                     </div>
+
                     <div class="space-y-1">
                         <label class="font-body-sm text-on-surface font-semibold">Hedef Bölge</label>
-                        <select class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                            <option>Türkiye</option>
-                            <option>Avrupa</option>
-                            <option>Global</option>
+                        <select asp-for="RegionID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary outline-none">
+                            @foreach (var r in ViewBag.Regions as List<ResultRegionDTO>)
+                            {
+                                <option value="@r.RegionID">@r.RegionName</option>
+                            }
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-md pt-4">
-                <h3 class="font-label-caps text-label-caps text-on-tertiary-fixed-variant border-b border-surface-container pb-2 uppercase tracking-widest text-[10px]">Bütçe ve Planlama</h3>
+                <h3 class="font-label-caps text-label-caps text-on-tertiary-fixed-variant border-b border-surface-container pb-2 uppercase tracking-widest text-[10px]">Müşteri Bilgisi ve Bütçe</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                     <div class="space-y-1">
+                        <label class="font-body-sm text-on-surface font-semibold">Müşteri Adı</label>
+                        <input type="text" asp-for="ClientName" placeholder="Örn: Marka A.Ş." class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary outline-none" required>
+                    </div>
+                    <div class="space-y-1">
                         <label class="font-body-sm text-on-surface font-semibold">Toplam Bütçe (₺)</label>
                         <div class="relative">
-                            <input type="number" placeholder="0.00" class="w-full border-outline-variant rounded font-body-sm h-11 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                            <input type="number" step="0.01" asp-for="Budget" placeholder="0.00" class="w-full border-outline-variant rounded font-body-sm h-11 pl-10 pr-4 focus:ring-2 focus:ring-primary outline-none">
                             <span class="absolute left-4 top-3 text-slate-400 font-bold text-sm">₺</span>
                         </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Durum</label>
-                        <select class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                            <option>Yayında</option>
-                            <option>Beklemede</option>
-                            <option>Durduruldu</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                    <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Başlangıç Tarihi</label>
-                        <input type="date" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Bitiş Tarihi</label>
-                        <input type="date" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
                     </div>
                 </div>
             </div>
@@ -90,11 +79,4 @@
             </button>
         </div>
     </form>
-
-    <div class="flex items-start gap-3 p-4 bg-primary-fixed rounded border border-outline-variant opacity-80">
-        <span class="material-symbols-outlined text-on-primary-fixed-variant">info</span>
-        <p class="text-[11px] text-on-primary-fixed-variant leading-relaxed">
-            <strong>Not:</strong> Kampanya bilgilerini güncellediğinizde reklam ağlarındaki senkronizasyon yaklaşık 5 dakika sürebilir. Bütçe değişiklikleri anında yansıtılır.
-        </p>
-    </div>
 </div>
