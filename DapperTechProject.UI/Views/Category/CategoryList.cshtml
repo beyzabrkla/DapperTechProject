@@ -46,18 +46,13 @@
         <div class="z-10 px-2">
             <span class="font-label-caps text-stone-400 uppercase text-[10px] font-black tracking-widest">En Popüler Segment</span>
             <div class="mt-sm">
-                <span class="font-h1 text-[26px] text-[#332A1C] font-black tracking-tight">@(Model.FirstOrDefault()?.CategoryName?.ToUpper() ?? "VERİ YOK")</span>
+                <span class="font-h1 text-[26px] text-[#332A1C] font-black tracking-tight">
+                    @(ViewBag.PopularCategory?.ToUpper() ?? "VERİ YOK")
+                </span>
                 <p class="font-body-sm text-stone-500 mt-1 text-[12px]">Reklam ağındaki yayıncıların en yoğun olduğu kategori.</p>
             </div>
         </div>
-        <div class="z-10 bg-[#D4A373]/10 p-5 rounded-2xl mr-4 border border-[#D4A373]/20">
-            <span class="material-symbols-outlined text-[42px] text-[#332A1C]">equalizer</span>
-        </div>
-        <div class="absolute -right-4 -bottom-4 opacity-[0.03] pointer-events-none">
-            <span class="material-symbols-outlined text-[120px]">trending_up</span>
-        </div>
     </div>
-
     <div class="bg-[#332A1C] text-white p-md rounded-xl shadow-lg flex flex-col justify-center border border-stone-800">
         <div class="flex justify-between items-start">
             <span class="font-label-caps text-[#D4A373] uppercase text-[10px] font-black tracking-widest">Aktif Durum</span>
