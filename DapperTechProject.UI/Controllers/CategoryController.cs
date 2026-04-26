@@ -15,19 +15,24 @@ namespace DapperTechProject.UI.Controllers
 
         public async Task<IActionResult> CategoryList(int page = 1, bool? status = null, string search = null)
         {
-            var values = await _categoryRepository.GetCategoriesPagedAsync(page, 12, status, search); 
+            //Sayfalama ve filtreleme parametrelerine göre kategorileri getir
+            var values = await _categoryRepository.GetCategoriesPagedAsync(page, 12, status, search);
 
+            //Sayfalama navigasyonu için filtreli toplam kayıt sayısını al
             int totalCount = await _categoryRepository.GetTotalCategoryCountAsync(status);
 
-            ViewBag.GrandTotal = await _categoryRepository.GetTotalCategoryCountAsync(null); //sistemdeki toplam kayıt sayısı (filtre uygulanmadan)
+            //İstatistik kartlarını besle (Tüm kayıtlar ve Aktif olanlar)
+            ViewBag.GrandTotal = await _categoryRepository.GetTotalCategoryCountAsync(null);
+            ViewBag.ActiveCount = await _categoryRepository.GetTotalCategoryCountAsync(true);
 
-            ViewBag.ActiveCount = await _categoryRepository.GetTotalCategoryCountAsync(true); //sistemdeki aktif kayıt sayısı
+            //En popüler kategoriyi al ve ViewBag'e taşı
+            ViewBag.PopularCategory = await _categoryRepository.GetMostPopularCategoryNameAsync();
 
+            //View tarafına navigasyon verilerini taşı
             ViewBag.TotalCount = totalCount;
             ViewBag.CurrentStatus = status;
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling((decimal)totalCount / 12);
-
             return View(values);
         }
 

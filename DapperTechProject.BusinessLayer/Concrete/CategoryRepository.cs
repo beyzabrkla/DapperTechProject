@@ -53,7 +53,6 @@ namespace DapperTechProject.BusinessLayer.Concrete
 
         public async Task CreateCategoryAsync(CreateCategoryDTO createCategoryDTO)
         {
-            // Status eklendi
             string query = "INSERT INTO Categories (CategoryName, Status) VALUES (@name, @status)";
             using (var connection = _context.CreateConnection())
             {
@@ -76,7 +75,6 @@ namespace DapperTechProject.BusinessLayer.Concrete
 
         public async Task UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDTO)
         {
-            // Status güncellemesi eklendi
             string query = "UPDATE Categories SET CategoryName = @name, Status = @status WHERE CategoryID = @id";
             using (var connection = _context.CreateConnection())
             {
@@ -97,5 +95,22 @@ namespace DapperTechProject.BusinessLayer.Concrete
                 await connection.ExecuteAsync(query, new { id });
             }
         }
+
+        public async Task<string> GetMostPopularCategoryNameAsync()
+        {
+            string query = @"
+        SELECT TOP 1 c.CategoryName
+        FROM AdImpressions ai
+        INNER JOIN Publishers p ON ai.PublisherID = p.PublisherID
+        INNER JOIN Categories c ON p.CategoryID = c.CategoryID
+        GROUP BY c.CategoryName
+        ORDER BY COUNT(*) DESC";
+
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<string>(query) ?? "Belirlenmedi";
+            }
+        } 
+
     }
 }

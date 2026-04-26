@@ -15,6 +15,7 @@ namespace DapperTechProject.BusinessLayer.Abstract
         Task<GetByIdCategoryDTO> GetCategoryByIdAsync(int id);
         Task UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDTO);
         Task DeleteCategoryAsync(int id);
+        Task<string> GetMostPopularCategoryNameAsync(); //En çok kullanılan kategorinin adını döndürüyor
 
     }
 }
