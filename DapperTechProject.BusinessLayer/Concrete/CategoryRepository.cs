@@ -2,6 +2,7 @@
 using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.BusinessLayer.Context;
 using DapperTechProject.DTOLayer.CateogoryDTOs;
+using System.Data;
 
 namespace DapperTechProject.BusinessLayer.Concrete
 {
@@ -24,15 +25,40 @@ namespace DapperTechProject.BusinessLayer.Concrete
             }
         }
 
+        public async Task<List<ResultCategoryDTO>> GetCategoriesPagedAsync(int pageNumber, int pageSize)
+        {
+           int offset = (pageNumber - 1) * pageSize;
+
+            string query = "select * from Categories order by CategoryID offset @offset rows fetch next @pageSize rows only"; 
+            var parameters = new DynamicParameters();
+            parameters.Add("offset", offset); // Parametreye hesapladığımız offset değerini ekliyoruz
+            parameters.Add("pageSize", pageSize); 
+
+            using (var connection = _context.CreateConnection())
+            {
+                var categories = await connection.QueryAsync<ResultCategoryDTO>(query, parameters);
+                return categories.ToList();
+            }
+        }
+
+        public async Task<int> GetTotalCategoryCountAsync()
+        {
+            string query = "SELECT COUNT(*) FROM Categories";
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<int>(query);
+            }
+        }
+
         public async Task CreateCategoryAsync(CreateCategoryDTO createCategoryDTO)
         {
-            string query = "insert into Categories (CategoryName) values (@name)"; // SQL sorgusu, parametre olarak @Name kullanıyoruz
-            var parameters = new DynamicParameters(); // Dapper'ın DynamicParameters sınıfını kullanarak parametreleri oluşturuyoruz
-            parameters.Add("name", createCategoryDTO.CategoryName); // Parametreye createCategoryDTO'dan gelen CategoryName değerini ekliyoruz
+            string query = "insert into Categories (CategoryName) values (@name)";
+            var parameters = new DynamicParameters();
+            parameters.Add("name", createCategoryDTO.CategoryName); 
 
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, parameters); // Sorguyu çalıştırarak yeni kategoriyi veritabanına ekliyoruz
+                await connection.ExecuteAsync(query, parameters); 
             }
         }
 
@@ -42,7 +68,7 @@ namespace DapperTechProject.BusinessLayer.Concrete
             var parameters = new DynamicParameters();
             parameters.Add("id", id); // Parametreye id değerini ekliyoruz
 
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            using (var connection = _context.CreateConnection())
             {
                 //eğer kayıt varsa ilkini getirir, yoksa null döner
                 var category = await connection.QueryFirstOrDefaultAsync<GetByIdCategoryDTO>(query, parameters);
@@ -52,13 +78,16 @@ namespace DapperTechProject.BusinessLayer.Concrete
 
         public async Task UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDTO)
         {
-            string query = "update Categories set CategoryName = @name where CategoryID = @id"; 
-            var parameters = new DynamicParameters();
-            parameters.Add("name", updateCategoryDTO.CategoryName); // Parametreye updateCategoryDTO'dan gelen CategoryName değerini ekliyoruz
-            parameters.Add("id", updateCategoryDTO.CategoryID);
-            using (var connection = _context.CreateConnection()) // Dapper ile bağlantıyı açıyoruz
+            string query = "update Categories set CategoryName = @name where CategoryID = @id";
+            using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, parameters); // Sorguyu çalıştırarak kategoriyi güncelliyoruz
+                if (connection.State == ConnectionState.Closed) connection.Open();
+
+                var parameters = new DynamicParameters();
+                parameters.Add("name", updateCategoryDTO.CategoryName);
+                parameters.Add("id", updateCategoryDTO.CategoryID);
+
+                await connection.ExecuteAsync(query, parameters);
             }
         }
 

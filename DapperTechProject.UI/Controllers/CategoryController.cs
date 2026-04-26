@@ -13,9 +13,17 @@ namespace DapperTechProject.UI.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<IActionResult> CategoryList()
+        public async Task<IActionResult> CategoryList(int page = 1)
         {
-            var values = await _categoryRepository.GetAllCategoriesAsync();
+            int pageSize = 12;
+            int totalCount = await _categoryRepository.GetTotalCategoryCountAsync();// Toplam kategori sayısını alıyoruz
+            var values = await _categoryRepository.GetCategoriesPagedAsync(page, pageSize); // Sayfalanmış kategorileri alıyoruz
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+
+            ViewBag.GrandTotal = totalCount;
+
             return View(values);
         }
 

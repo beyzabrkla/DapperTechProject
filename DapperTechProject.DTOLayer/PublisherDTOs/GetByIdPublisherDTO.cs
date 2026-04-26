@@ -10,7 +10,7 @@ namespace DapperTechProject.DTOLayer.PublisherDTOs
     {
         public int PublisherID { get; set; }
         public string WebsiteURL { get; set; }
-        public string Category { get; set; }
+        public string CategoryName { get; set; }
         public int CategoryID { get; set; }
     }
 }

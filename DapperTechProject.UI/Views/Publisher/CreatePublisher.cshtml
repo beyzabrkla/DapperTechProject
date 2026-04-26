@@ -11,7 +11,7 @@
             <h1 class="font-h1 text-h1 text-on-surface">Yeni Yayıncı Ekle</h1>
             <p class="font-body-md text-body-md text-on-surface-variant">Sisteme yeni bir platform veya web sitesi dahil edin.</p>
         </div>
-        <a asp-action="Index" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
+        <a asp-action="PublisherList" class="flex items-center gap-2 px-md py-2 border border-outline-variant bg-white text-on-surface hover:bg-surface-container transition-colors rounded text-sm">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span> Listeye Dön
         </a>
     </div>
@@ -25,22 +25,22 @@
                 <div class="grid grid-cols-1 gap-md">
                     <div class="space-y-1">
                         <label class="font-body-sm text-on-surface font-semibold">Web Sitesi Adresi (URL)</label>
-                        <input type="text" asp-for="WebsiteURL" placeholder="https://example.com" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        <input type="text" asp-for="WebsiteURL" placeholder="https://example.com" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-[#D4A373] outline-none transition-all">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                    <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Kategori Adı</label>
-                        <input type="text" asp-for="CategoryID" placeholder="Örn: Teknoloji" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="font-body-sm text-on-surface font-semibold">Kategori Seçimi (ID)</label>
-                        <select asp-for="CategoryID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                            <option value="1">Haber</option>
-                            <option value="2">E-Ticaret</option>
-                            <option value="3">Teknoloji</option>
-                            <option value="4">Blog</option>
+                    <div class="space-y-1 md:col-span-2">
+                        <label class="font-body-sm text-on-surface font-semibold">Yayıncı Kategorisi</label>
+                        <select asp-for="CategoryID" class="w-full border-outline-variant rounded font-body-sm h-11 px-4 focus:ring-2 focus:ring-[#D4A373] outline-none">
+                            <option value="">Lütfen bir kategori seçin...</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.CategoryID">@cat.CategoryName.ToUpper()</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>

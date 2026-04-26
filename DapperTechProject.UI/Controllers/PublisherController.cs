@@ -1,4 +1,5 @@
-﻿using DapperTechProject.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using DapperTechProject.BusinessLayer.Abstract;
 using DapperTechProject.DTOLayer.PublisherDTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,29 +8,39 @@ namespace DapperTechProject.UI.Controllers
     public class PublisherController : Controller
     {
         private readonly IPublisherRepository _publisherRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public PublisherController(IPublisherRepository publisherRepository)
+        public PublisherController(IPublisherRepository publisherRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _publisherRepository = publisherRepository;
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IActionResult> PublisherList()
+        public async Task<IActionResult> PublisherList(int page = 1, int? categoryId = null)
         {
-            var publishers = await _publisherRepository.GetAllPublisherAsync();
-            var model = publishers.Select(x => new ResultPublisherDTO
-            {
-                PublisherID = x.PublisherID,
-                WebsiteURL = x.WebsiteURL,
-                CategoryID = x.CategoryID,
-                // Eğer CategoryName'i başka bir tablodan (Join ile) çekiyorsan 
-                // burada o değeri de atamalısın.
-            }).ToList();
-            return View(model);
+            int pageSize = 12;
+
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = categories.ToList();
+
+            int totalCount = await _publisherRepository.GetTotalPublisherCountAsync(categoryId); // Toplam yayıncı sayısını kategoriye göre alıyoruz
+            var values = await _publisherRepository.GetPublishersWithCategoriesAsync(page, pageSize, categoryId); // Yayıncıları kategori bilgisiyle birlikte alıyoruz
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.SelectedCategory = categoryId;
+            ViewBag.TotalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+
+            return View(values);
         }
 
         [HttpGet]
-        public IActionResult CreatePublisher()
+        public async Task<IActionResult> CreatePublisher()
         {
+            ViewBag.Categories = (await _categoryRepository.GetAllCategoriesAsync()).ToList();
             return View();
         }
 
@@ -43,8 +54,16 @@ namespace DapperTechProject.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdatePublisher(int id)
         {
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = categories.ToList();
+
             var publisher = await _publisherRepository.GetByIdPublisherAsync(id);
-            return View(publisher);
+
+            if (publisher == null) return RedirectToAction("PublisherList");
+
+            var model = _mapper.Map<GetByIdPublisherDTO>(publisher);
+
+            return View(model);
         }
 
         [HttpPost]
